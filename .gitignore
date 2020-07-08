@@ -1,0 +1,9 @@
+*.pdf
+*.fls
+*.aux
+*.blg
+*.log
+*.bbl
+*.fdb_latexmk
+*.DS_Store
+_build/

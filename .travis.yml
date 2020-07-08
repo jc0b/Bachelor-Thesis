@@ -1,0 +1,33 @@
+sudo: required
+dist: trusty
+before_install:
+- sudo apt-get -qq update && sudo apt-get install -y --no-install-recommends texlive-fonts-recommended
+  texlive-latex-extra texlive-fonts-extra dvipng texlive-latex-recommended
+script:
+- mkdir _build
+- pdflatex -interaction=nonstopmode  -output-directory _build main.tex
+- pwd
+- ls
+before_deploy:
+      # Set up git user name and tag this commit
+      - git config --local user.name "Travis CI"
+      - git config --local user.email "travis@travis-ci.org"
+      - git tag "$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)"
+deploy:
+  provider: releases
+  api_key: $GITHUB_OAUTH
+  file_glob: true
+  file: _build/*
+  skip_cleanup: true
+  on:
+    repo: jc0b/Bachelor-Thesis
+
+#discord channel integration, I should probably mirror this sh file somewhere just in case    
+after_success:
+  - wget http://assets.jacobsburley.com/send.sh
+  - chmod +x send.sh
+  - ./send.sh success $WEBHOOK_URL
+after_failure:
+  - wget http://assets.jacobsburley.com/send.sh
+  - chmod +x send.sh
+  - ./send.sh failure $WEBHOOK_URL
