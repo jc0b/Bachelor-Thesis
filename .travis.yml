@@ -4,10 +4,8 @@ before_install:
 - sudo apt-get -qq update && sudo apt-get install -y --no-install-recommends texlive-fonts-recommended
   texlive-latex-extra texlive-fonts-extra dvipng texlive-latex-recommended
 script:
-- mkdir _build
-- pdflatex -interaction=nonstopmode  -output-directory _build main.tex
-- pwd
-- ls
+- chmod +x compile.sh
+- ./compile.sh
 before_deploy:
       # Set up git user name and tag this commit
       - git config --local user.name "Travis CI"
