@@ -85,41 +85,41 @@ Vrije Universiteit Amsterdam
 Will be written last.
 
 \section{Introduction} \label{sec:introduction}
-With the rapid expansion in the use of cloud services by both consumers and businesses \cite{Kushida2015}\cite{mokhtar2013}, the data centers that house these services must also grow. 
-While many may not see the cloud in its physical manifestation, cloud services are provided by servers, and servers are typically stored in data centers. 
-The configuration of such servers varies drastically, depending on the intended workload. 
-Relational databases, for example, can have large memory requirements. 
-Likewise, file servers may not need a particularly powerful CPU, but do require a lot of disks, and perhaps even a network card with higher throughput.
+	With the rapid expansion in the use of cloud services by both consumers and businesses \cite{Kushida2015}\cite{mokhtar2013}, the data centers that house these services must also grow. 
+	While many may not see the cloud in its physical manifestation, cloud services are provided by servers, and servers are typically stored in data centers. 
+	The configuration of such servers varies drastically, depending on the intended workload. 
+	Relational databases, for example, can have large memory requirements. 
+	Likewise, file servers may not need a particularly powerful CPU, but do require a lot of disks, and perhaps even a network card with higher throughput.
 
-When architecting data centers, many stakeholders must come together and agree on the various specifications of the data center, each with their own unique set of requirements. 
-System architects will then begin to design a system that meets these requirements. 
-However, such projects also have constraints. 
-Designing a data center isn't as easy as buying servers that meet the requirements of the stakeholders and putting them into use. 
-Constraints such as budget or physical space often influence design decisions, with smaller data centers perhaps comprising of higher-density compute nodes. 
-Designing data centers is often a complex problem, for which no validated analytical models exist. 
-Despite some academic institutions often being forthcoming with the technologies used in their data centers, there is no one-size-fits-all approach for data center design, making it hard to determine what hardware you need for a given workload.
+	When architecting data centers, many stakeholders must come together and agree on the various specifications of the data center, each with their own unique set of requirements. 
+	System architects will then begin to design a system that meets these requirements. 
+	However, such projects also have constraints. 
+	Designing a data center isn't as easy as buying servers that meet the requirements of the stakeholders and putting them into use. 
+	Constraints such as budget or physical space often influence design decisions, with smaller data centers perhaps comprising of higher-density compute nodes. 
+	Designing data centers is often a complex problem, for which no validated analytical models exist. 
+	Despite some academic institutions often being forthcoming with the technologies used in their data centers, there is no one-size-fits-all approach for data center design, making it hard to determine what hardware you need for a given workload.
 
-We focus in this work on OpenDC, an open-source data center simulator \cite{Iosup2017}, designed to simulate a wide range of workloads across a variety of server hardware. 
-In its current state, OpenDC can be used to simulate user-specified workloads on user-designed systems. 
-Users must specify each individual component used, and build out an entire system. 
-This requires a high level of technical understanding, and relies solely on the user's knowledge of the intended workload when component choices are made. 
-In this way, the reasoning behind component choices has to be expressed by the individual, rather than OpenDC itself. 
+	We focus in this work on OpenDC, an open-source data center simulator \cite{Iosup2017}, designed to simulate a wide range of workloads across a variety of server hardware. 
+	In its current state, OpenDC can be used to simulate user-specified workloads on user-designed systems. 
+	Users must specify each individual component used, and build out an entire system. 
+	This requires a high level of technical understanding, and relies solely on the user's knowledge of the intended workload when component choices are made. 
+	In this way, the reasoning behind component choices has to be expressed by the individual, rather than OpenDC itself. 
 
-Looking forward, it would be beneficial for OpenDC to simulate user-specified workloads on systems designed by OpenDC itself. 
-OpenDC would be able to leverage a large database of performance data to make component choices based on the workload specified by the user. 
-In this way, the system would be designed for the best objective performance at the specified workload, potentially adherent to specified constraints such as financial or power budget. 
+	Looking forward, it would be beneficial for OpenDC to simulate user-specified workloads on systems designed by OpenDC itself. 
+	OpenDC would be able to leverage a large database of performance data to make component choices based on the workload specified by the user. 
+	In this way, the system would be designed for the best objective performance at the specified workload, potentially adherent to specified constraints such as financial or power budget. 
 
-With the implementation of prefabs, this process would also become transparent to the user. 
-A user could ask OpenDC to design a complete system for a specified workload, but they could also design their own system using component recommendations from OpenDC. 
-These component recommendations would come in the form of prefabs, collections of components that together are performant at a specific task. 
-A pre-fab may be as small as one server, but could also be a rack full of servers, or even a room full of equipment. 
+	With the implementation of prefabs, this process would also become transparent to the user. 
+	A user could ask OpenDC to design a complete system for a specified workload, but they could also design their own system using component recommendations from OpenDC. 
+	These component recommendations would come in the form of prefabs, collections of components that together are performant at a specific task. 
+	A pre-fab may be as small as one server, but could also be a rack full of servers, or even a room full of equipment. 
 
-This process would be akin to the modularity already seen in software engineering, where a programmer may import a library (often written by someone else) to enable certain functionality in their program. 
-The programmer often only uses one or two functions from this library, and do not necessarily understand how these functions work (nor do they need to).
+	This process would be akin to the modularity already seen in software engineering, where a programmer may import a library (often written by someone else) to enable certain functionality in their program. 
+	The programmer often only uses one or two functions from this library, and do not necessarily understand how these functions work (nor do they need to).
 
-This concept is already offered by some cloud providers: DigitalOcean is a Virtual Private Server (VPS) provider that harnesses a "marketplace" of pre-configured VPS templates (known as "1-Click Apps") in order to simplify use of the platform \cite{DigitalOcean2020}. 
-Customers can then easily add a pre-configured VPS to their environment, without having to worry about operating system installation, configuration, or maintenance. 
-Templates provided through the platform are typically created by the vendors of the software used in each template, and are thus of high quality and suitability for the application.
+	This concept is already offered by some cloud providers: DigitalOcean is a Virtual Private Server (VPS) provider that harnesses a "marketplace" of pre-configured VPS templates (known as "1-Click Apps") in order to simplify use of the platform \cite{DigitalOcean2020}. 
+	Customers can then easily add a pre-configured VPS to their environment, without having to worry about operating system installation, configuration, or maintenance. 
+	Templates provided through the platform are typically created by the vendors of the software used in each template, and are thus of high quality and suitability for the application.
 
 \newpage
 
@@ -158,19 +158,26 @@ Templates provided through the platform are typically created by the vendors of 
 	\subsection{A definition and corresponding design of a datastructure for storing prefabs}
 		In order to store our datacenter hardware representation within OpenDC, we define a datastructure to represent the datacenter hardware. 
 		This datastructure aims to 
-	\subsection{Designing ways to create and interact with prefabs (in openDC)}
+	\subsection{Designing ways to create and interact with prefabs (in OpenDC)}
 
 \section{Implementation of a Prototype}
 
 	\subsection{Why prototype?}
-
+		Prototyping is an important part of our design process for implementing the new topologies in OpenDC.
+		The design proposal requires the implementation of certain new technologies (such as MongoDB) which we are unfamiliar with.
+		As a result, prototyping provides us with a way of becoming familiar with these new technologies, as well as assessing their suitability, before we begin the process of implementing them into the existing OpenDC codebase.
+		We also can create prototypes of the datastructure, as well as the corresponding interactions with it, and assess the suitability of the datastructure with regards to the interactions we require it to be capable of handling.
 	\subsection{Creating a prototype}
-
+		The two main learning outcomes of prototyping were to explore how we could best implement and interact with MongoDB, and to iteratively improve our datastructure designs.
+		As a result, the prototype consisted of three components: a MongoDB instance, a Python module that interfaced with the database, and a second Python application to serve as a rudimentary frontend. 
+		This configuration was chosen to be relatively close to how OpenDC already implemented its database connections, which was structured in a similar way. 
 	\subsection{The process of implementing the prototype}
 
 	\subsection{Prototype validation}
 
 	\subsection{Lessons learned}
+		During prototyping, we learnt many things that influenced the decisions we made during the implementation phase.
+		We also learnt a lot about the differences between MongoDB and SQL, which allowed us to improve how we implement this new database technology throughout OpenDC.
 
 \section{Evaluation of Suitability of Design \& Implementation}
 
