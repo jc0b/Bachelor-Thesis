@@ -157,7 +157,9 @@ Will be written last.
 		Brands of hardware are not necessary in order to simulate workloads, but they are useful when a user is making design decisions, or presenting their design to a wider audience.
 	\subsection{A definition and corresponding design of a datastructure for storing prefabs}
 		In order to store our datacenter hardware representation within OpenDC, we define a datastructure to represent the datacenter hardware. 
-		This datastructure aims to 
+		This datastructure aims to be simple to understand, as well as easily expandable in order to represent hardware configurations that we have not focussed on in this research (i.e. blade servers, or other chassis that may contain multiple/unconventional motherboards). 
+		For this reason, we have chosen to use JavaScript Object Notation (JSON) to store our datastructure. 
+		This supports our goals of ease of use and expandibility, as JSON is both human-readable, 
 	\subsection{Designing ways to create and interact with prefabs (in OpenDC)}
 
 \section{Implementation of a Prototype}
