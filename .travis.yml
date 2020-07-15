@@ -3,8 +3,8 @@ dist: trusty
 before_install:
 - sudo apt-get -qq update && sudo apt-get install -y --no-install-recommends texlive-fonts-recommended
   texlive-latex-extra texlive-fonts-extra dvipng texlive-latex-recommended
-script:
 - chmod +x compile.sh
+script:
 - ./compile.sh
 before_deploy:
       # Set up git user name and tag this commit
@@ -15,7 +15,7 @@ deploy:
   provider: releases
   api_key: $GITHUB_OAUTH
   file_glob: true
-  file: _build/*
+  file: main.pdf
   skip_cleanup: true
   on:
     repo: jc0b/Bachelor-Thesis
