@@ -14,6 +14,7 @@
 \begin{document}
 
 \thispagestyle{empty}
+\newcommand{\opendc}{OpenDC}
 
 \begin{center}
 
@@ -21,7 +22,8 @@ Vrije Universiteit Amsterdam
 
 \vspace{1mm}
 
-\includegraphics[height=28mm]{vu-griffioen-white.pdf}
+\includegraphics[height=28mm]{images/vu-griffioen-white.pdf}
+\includegraphics[height=28mm]{images/atLarge.jpg}
 
 \vspace{1.5cm}
 
@@ -61,131 +63,163 @@ Vrije Universiteit Amsterdam
 
 \newpage
 
-%Notes:
-%\begin{enumerate}
-
-%    \item Curious about guidelines on conducting and on supervising research projects for young researchers? %For both students and supervisors, we recommend consulting guidelines on conducting and on supervising research projects for young researchers, respectively. 
-%    There are several options to learn more, for example, from this book by Sharp et al.~\cite{research:book/SharpPW02}.
-
-%    \item New to \LaTeX{}? Consult a quick guide, such as~\cite{techrep:latex,techblog:latex}.
-    
-%    \item Is this going to be very abstract? We use as a running example a project resulting in a Tier-1 publication~\cite{DBLP:conf/sc/AndreadisVMI18}. 
-    %The project took the HP student about 25~ECs to complete, including the conference presentation and the polished, camera-ready version of the article. (Take these numbers with a grain of salt---without detracting from their achievement, the student received plenty of support from both the supervisor and the research team.)
-    
-%\end{enumerate}
-
-
-%\section*{Important}
-
-%We do not have a lower-limit on the number of pages, but we do have one for the upper-limit. {\bf Keep the problem statement to under 4 pages, not including the title-page, the plan, and the references.}
-
+\tableofcontents
+\newpage
+\listoffigures
+\listoftables
+\newpage
 
 
 \section*{Abstract}
 Will be written last.
+\newpage
 
 \section{Introduction} \label{sec:introduction}
-	With the rapid expansion in the use of cloud services by both consumers and businesses \cite{Kushida2015}\cite{mokhtar2013}, the data centers that house these services must also grow. 
-	While many may not see the cloud in its physical manifestation, cloud services are provided by servers, and servers are typically stored in data centers. 
-	The configuration of such servers varies drastically, depending on the intended workload. 
-	Relational databases, for example, can have large memory requirements. 
-	Likewise, file servers may not need a particularly powerful CPU, but do require a lot of disks, and perhaps even a network card with higher throughput.
+	\subsection{\opendc{}}
+		With the rapid expansion in the use of cloud services by both consumers and businesses \cite{Kushida2015}\cite{mokhtar2013}, the data centers that house these services must also grow. 
+		While many may not see the cloud in its physical manifestation, cloud services are provided by servers, and servers are typically stored in data centers. 
+		The configuration of such servers varies drastically, depending on the intended workload. 
+		Relational databases, for example, can have large memory requirements. 
+		Likewise, file servers may not need a particularly powerful CPU, but do require a lot of disks, and perhaps even a network card with higher throughput.
 
-	When architecting data centers, many stakeholders must come together and agree on the various specifications of the data center, each with their own unique set of requirements. 
-	System architects will then begin to design a system that meets these requirements. 
-	However, such projects also have constraints. 
-	Designing a data center isn't as easy as buying servers that meet the requirements of the stakeholders and putting them into use. 
-	Constraints such as budget or physical space often influence design decisions, with smaller data centers perhaps comprising of higher-density compute nodes. 
-	Designing data centers is often a complex problem, for which no validated analytical models exist. 
-	Despite some academic institutions often being forthcoming with the technologies used in their data centers, there is no one-size-fits-all approach for data center design, making it hard to determine what hardware you need for a given workload.
+		When architecting data centers, many stakeholders must come together and agree on the various specifications of the data center, each with their own unique set of requirements. 
+		System architects will then begin to design a system that meets these requirements. 
+		However, such projects also have constraints. 
+		Designing a data center isn't as easy as buying servers that meet the requirements of the stakeholders and putting them into use. 
+		Constraints such as budget or physical space often influence design decisions, with smaller data centers perhaps comprising of higher-density compute nodes. 
+		Designing data centers is often a complex problem, for which no validated analytical models exist. 
+		Despite some academic institutions often being forthcoming with the technologies used in their data centers, there is no one-size-fits-all approach for data center design, making it hard to determine what hardware you need for a given workload.
+		We focus in this work on \opendc{}, an open-source Discrete Event Simulator used to simulate the performance of workloads on massive computer systems. 
+		Its purpose is to assist in performance testing of data centers designed by users, with the intention that the information gained can be factored in when these systems are being designed. 
+		\opendc{} simulates workloads using traces from the Grid Workload Archive \cite{Iosup2008}, which are provided by participants who contribute to the archive. 
+		These traces provide metadata about the scheduling requirements of jobs frequently sent to data centers, such as CPU usage throughout a job. 
+		Using this information, \opendc{} can simulate the speed with which a workload will complete, as well as resource usage throughout the workload. 
+		These simulations can assist businesses and educational institutions in highlighting and addressing performance concerns in their next-generation environments before any hardware has even been purchased.
+	\subsection{Problem}
+		In its current state, \opendc{} can be used to simulate user-specified workloads on user-designed systems. 
+		Users must specify each individual component used, and build out an entire system. 
+		This requires a high level of technical understanding, and relies solely on the user's knowledge of the intended workload when component choices are made. 
+		In this way, the reasoning behind component choices has to be expressed by the individual, rather than \opendc{} itself. 
 
-	We focus in this work on OpenDC, an open-source data center simulator \cite{Iosup2017}, designed to simulate a wide range of workloads across a variety of server hardware. 
-	In its current state, OpenDC can be used to simulate user-specified workloads on user-designed systems. 
-	Users must specify each individual component used, and build out an entire system. 
-	This requires a high level of technical understanding, and relies solely on the user's knowledge of the intended workload when component choices are made. 
-	In this way, the reasoning behind component choices has to be expressed by the individual, rather than OpenDC itself. 
+		Looking forward, it would be beneficial for \opendc{} to simulate user-specified workloads on systems designed by \opendc{} itself. 
+		\opendc{} would be able to leverage a large database of performance data to make component choices based on the workload specified by the user. 
+		In this way, the system would be designed for the best objective performance at the specified workload, potentially adherent to specified constraints such as financial or power budget. 
 
-	Looking forward, it would be beneficial for OpenDC to simulate user-specified workloads on systems designed by OpenDC itself. 
-	OpenDC would be able to leverage a large database of performance data to make component choices based on the workload specified by the user. 
-	In this way, the system would be designed for the best objective performance at the specified workload, potentially adherent to specified constraints such as financial or power budget. 
+		With the implementation of prefabs, this process would also become transparent to the user. 
+		A user could ask \opendc{} to design a complete system for a specified workload, but they could also design their own system using component recommendations from \opendc{}. 
+		These component recommendations would come in the form of prefabs, collections of components that together are performant at a specific task. 
+		A prefab may be as small as one server, but could also be a rack full of servers, or even a room full of equipment. 
+	\subsection{Research Questions}
+		In this thesis, we aim to improve the ease of use of \opendc{}, while also implementing a new, easily-expandable representation of datacenter hardware that allows for accurate technical descriptions of hardware. 
+		In doing so, we must answer the following 3 questions:
+		\todojacob{Reword the RQs to flow a little better and be a little clearer.}
+		\begin{itemize}
+			\item [\textbf{RQ1:}] How do we design a prefab abstraction that accurately describes important technical and composable features?
+			\item [\textbf{RQ2:}] How to further allow operations, extensions, and the sharing of data?
+			\item [\textbf{RQ1:}] How can we test and validate the use of prefabs to define hyperconverged/HPC datacenter topologies?
+		\end{itemize}
+	\subsection{Approach}
+		The approach will start with understanding the shortcomings of the current implementation of topologies in \opendc{}.
+		Next, we will seek to understand the components that are important to represent in the datastructure, as well as identifying components we no longer need to represent.
+		From here, we will examine a variety of common methods of representing data, and assess their suitability towards our desired way of representing datacenter hardware.
+		Following on from this we will present a datastructure design, as well as the decisions made during the design process, and validate it through a prototyping stage.
+		Once validation is complete, we will implement the datastructure design and accompanying technologies in \opendc{}.
+	\subsection{Main Contribution of the work}
+		This thesis pioneers a new approach to representing datacenter hardware within a datacenter simulator.
+		If successful, the main contributions of this thesis will be:
+		\begin{enumerate}
+			\item A design for a datastructure that can be used to store datacenter hardware representations that is also easily usable and expandable, as well as an evaluation of said design in terms of the suitability of the datastructure for purpose.
+			\item An implementation of this design into the main codebase of \opendc{}, as well as an evaluation of this design comparing usability to the previous version of \opendc{}.
+		\end{enumerate}
+	\subsection{Thesis Outline}
+		The first chapter provides a short introduction to the current state of datacenter design, as well as the current state of OpenDC. 
+		Chapter 2 provides more background on how modularity is currently used in computing, both in terms of datacenters and in terms of fields such as software engineering. 
+		In chapters 3 and 4, we explore the design of the prefab datastructure, reason about the choices that have been made during the design process, and touch on the process of implementing our chosen datastructure into the \opendc{} codebase.
+		Chapter 5 provides an assessment of the suitability of the datastructure and technologies we chose, now that they have been implemented in \opendc{}.
+		Finally, we discuss both the conclusion and future of this endeavour in chapter 6.
+	
 
-	With the implementation of prefabs, this process would also become transparent to the user. 
-	A user could ask OpenDC to design a complete system for a specified workload, but they could also design their own system using component recommendations from OpenDC. 
-	These component recommendations would come in the form of prefabs, collections of components that together are performant at a specific task. 
-	A pre-fab may be as small as one server, but could also be a rack full of servers, or even a room full of equipment. 
-
-	This process would be akin to the modularity already seen in software engineering, where a programmer may import a library (often written by someone else) to enable certain functionality in their program. 
-	The programmer often only uses one or two functions from this library, and do not necessarily understand how these functions work (nor do they need to).
-
-	This concept is already offered by some cloud providers: DigitalOcean is a Virtual Private Server (VPS) provider that harnesses a "marketplace" of pre-configured VPS templates (known as "1-Click Apps") in order to simplify use of the platform \cite{DigitalOcean2020}. 
-	Customers can then easily add a pre-configured VPS to their environment, without having to worry about operating system installation, configuration, or maintenance. 
-	Templates provided through the platform are typically created by the vendors of the software used in each template, and are thus of high quality and suitability for the application.
+	
 
 \newpage
 
 \section{Background} \label{sec:background}
 
-	\subsection{The openDC project}
-		OpenDC is an open-source Discrete Event Simulator used to simulate performance characteristics of workloads in massive computer systems. 
-		Its purpose is to assist in performance testing of data centers designed by users, with the intention that the information gained can be factored in when these systems are being designed. 
-		OpenDC simulates workloads using traces from the Grid Workload Archive \cite{Iosup2008}, which are provided by participants who contribute to the archive. 
-		These traces provide metadata about the scheduling requirements of jobs frequently sent to data centers, such as CPU usage throughout a job. 
-		Using this information, OpenDC can simulate the speed with which a workload will complete, as well as resource usage throughout the workload. 
-		These simulations can assist businesses and educational institutions in highlighting and addressing performance concerns in their next-generation environments before any hardware has even been purchased.
-	\subsection{Modularity in other areas of computing}
+	\subsection{A Topological View of Datacenters}
+		In general, individuals working with datacenters think about their datacenter in terms of its topology. 
+		Often, this takes the form of a network topology \cite{Couto2012}, where a spanning tree is built from all of the participating nodes. 
+		For \opendc{}, however, it is important to consider the parent-child relationships between the hardware itself. 
+		For example, we can consider a chassis residing within a given rack to be a child of that rack.
+		In this way, we can build our own spanning tree concept, which allows us to easily manipulate parent objects and all of their children by simply moving the parent object elsewhere in the tree, reshaping our topology.
+	\subsection{Modularity in computing}
 		In software architecture, it is becoming increasingly common to rely on frameworks and libraries written by others in the software engineering community. 
+
+		This process would be akin to the modularity already seen in software engineering, where a programmer may import a library (often written by someone else) to enable certain functionality in their program. 
+		The programmer often only uses one or two functions from this library, and do not necessarily understand how these functions work (nor do they need to).
 		It is usually not necessary to understand the full workings of such a library, as the benefit comes from its utility in meeting certain requirements. 
-		We can view these software modules as prefabricated software. 
-		It follows, then, that it would be helpful to be able to describe datacenter hardware in such a way. 
+		We can view these software modules as prefabricated software, which an individual may add into their project with ease. 
+		Such a module may be added manually, by copying the relevant source files into the project, or may be added by means of a package manager.
+		\verb|npm| is a package manager for \verb|node.js| that seeks to make installing dependencies much easier for developers.
+		For open-source projects a developer can include a file listing all of the external packages they used in their project, as well as the specific versions of each of these packages, so that another individual can easily run the authors software on their own machine.
+		\verb|npm| also enables package authors to publish their packages in an online registry, so that other developers may download and use them \cite{Wittern2016}.
+		It follows, then, that it would be helpful to be able to describe datacenter hardware, and share these descriptions, in such a way. 
 		With the advent of PaaS and particularly SaaS offerings from major cloud providers, developers can implement entire layers of their software stack with just a few clicks. 
 		These layers still run in virtual machines, but the developer does not need to concern themselves too much with building or maintain the hardware or operating system.
+		This concept is already offered by some cloud providers: DigitalOcean is a Virtual Private Server (VPS) provider that harnesses a "marketplace" of pre-configured VPS templates (known as "1-Click Apps") in order to simplify use of the platform \cite{DigitalOcean2020}. 
+		Customers can then easily add a pre-configured VPS to their environment, without having to worry about operating system installation, configuration, or maintenance. 
+		Templates provided through the platform are typically created by the vendors of the software used in each template, and are thus of high quality and suitability for the application.
 	\subsection{The goal of prefabs}
-		Users of OpenDC would benefit from prefabs in much the same way, only having to focus on which services they want to run in their datacenter.
-		Large datacenter providers using OpenDC may also see a benefit. 
+		Users of \opendc{} would benefit from prefabs in much the same way, only having to focus on which services they want to run in their datacenter.
+		Large datacenter providers using \opendc{} may also see a benefit. 
 		Cloud service providers who provide IaaS services typically use homogenous hardware configurations, with different configurations for each performance tier. 
 		With prefabs, it would be straightforward to create a prefab that is representative of a given performance tier, and then clone it when performing capacity planning during periods of growth.
+	\subsection{Formats for Specifying Prefabs}
+
+	\subsection{Domain-Specific Prefabs}
 
 
 \section{A Design for a Representation of Data Center Hardware}
 
 	\subsection{A model for datacenter representation}
 		In this research, we provide a model for representing datacenter hardware. 
-		This model is not the first of its kind: Andreadis et al (2018) created a model for datacenter hardware in order to model scheduling in OpenDC. 
+		This model is not the first of its kind: Andreadis et al created a model for datacenter hardware in order to model scheduling in \opendc{} \cite{Andreadis2018}. 
 		Our model, however, offers more detail. 
-		When designing the model, it is important to consider that a large part of its purpose is to increase usability of OpenDC. 
+		When designing the model, it is important to consider that a large part of its purpose is to increase usability of \opendc{}. 
 		As a result, we choose to represent lots of hardware characteristics that are not used by the simulator, but provide useful information to the user. 
 		Brands of hardware are not necessary in order to simulate workloads, but they are useful when a user is making design decisions, or presenting their design to a wider audience.
 	\subsection{A definition and corresponding design of a datastructure for storing prefabs}
-		In order to store our datacenter hardware representation within OpenDC, we define a datastructure to represent the datacenter hardware. 
+		In order to store our datacenter hardware representation within \opendc{}, we define a datastructure to represent the datacenter hardware. 
 		This datastructure aims to be simple to understand, as well as easily expandable in order to represent hardware configurations that we have not focussed on in this research (i.e. blade servers, or other chassis that may contain multiple/unconventional motherboards). 
 		For this reason, we have chosen to use JavaScript Object Notation (JSON) to store our datastructure. 
 		This supports our goals of ease of use and expandibility, as JSON is both human-readable, 
-	\subsection{Designing ways to create and interact with prefabs (in OpenDC)}
+	\subsection{Designing ways to create and interact with prefabs (in \opendc{})}
 
 \section{Implementation of a Prototype}
 
 	\subsection{Why prototype?}
-		Prototyping is an important part of our design process for implementing the new topologies in OpenDC.
+		Prototyping is an important part of our design process for implementing the new topologies in \opendc{}.
 		The design proposal requires the implementation of certain new technologies (such as MongoDB) which we are unfamiliar with.
-		As a result, prototyping provides us with a way of becoming familiar with these new technologies, as well as assessing their suitability, before we begin the process of implementing them into the existing OpenDC codebase.
+		As a result, prototyping provides us with a way of becoming familiar with these new technologies, as well as assessing their suitability, before we begin the process of implementing them into the existing \opendc{} codebase.
 		We also can create prototypes of the datastructure, as well as the corresponding interactions with it, and assess the suitability of the datastructure with regards to the interactions we require it to be capable of handling.
 	\subsection{Creating a prototype}
 		The two main learning outcomes of prototyping were to explore how we could best implement and interact with MongoDB, and to iteratively improve our datastructure designs.
 		As a result, the prototype consisted of three components: a MongoDB instance, a Python module that interfaced with the database, and a second Python application to serve as a rudimentary frontend. 
-		This configuration was chosen to be relatively close to how OpenDC already implemented its database connections, which was structured in a similar way. 
+		This configuration was chosen to be relatively close to how \opendc{} already implemented its database connections, which was structured in a similar way. 
 	\subsection{The process of implementing the prototype}
 
 	\subsection{Prototype validation}
 
 	\subsection{Lessons learned}
 		During prototyping, we learnt many things that influenced the decisions we made during the implementation phase.
-		We also learnt a lot about the differences between MongoDB and SQL, which allowed us to improve how we implement this new database technology throughout OpenDC.
+		We also learnt a lot about the differences between MongoDB and SQL, which allowed us to improve how we implement this new database technology throughout \opendc{}.
 
 \section{Evaluation of Suitability of Design \& Implementation}
 
 
 \section{Conclusion} \label{sec:conclusion}
 
+
+\newpage
 % For more on bibliography styles, see 
 % https://www.overleaf.com/learn/latex/Bibtex_bibliography_styles
 \bibliographystyle{abbrv}
