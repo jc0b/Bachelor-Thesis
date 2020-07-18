@@ -112,7 +112,7 @@ Will be written last.
 	
 	\subsection{Research Questions}
 		In this thesis, we aim to improve the ease of use of \opendc{}, while also implementing a new, easily-expandable representation of datacenter hardware that allows for accurate technical descriptions of hardware. 
-		In doing so, we must answer the following three questions:
+		In doing so, we answer the following three questions:
 		\todojacob{Reword the RQs to flow a little better and be a little clearer.}
 		\begin{itemize}
 			\item [\textbf{RQ1:}] How do we design a prefab abstraction that accurately describes important technical and composable features?
@@ -217,9 +217,12 @@ Will be written last.
 		We also can create prototypes of the datastructure, as well as the corresponding interactions with it, and assess the suitability of the datastructure with regards to the interactions we require it to be capable of handling.
 	
 	\subsection{Creating a prototype}
-		The two main learning outcomes of prototyping were to explore how we could best implement and interact with MongoDB, and to iteratively improve our datastructure designs.
-		As a result, the prototype consisted of three components: a MongoDB instance, a Python module that interfaced with the database, and a second Python application to serve as a rudimentary frontend. 
-		This configuration was chosen to be relatively close to how \opendc{} already implemented its database connections, which was structured in a similar way. 
+		The two main learning outcomes of prototyping are to explore how we can best implement and interact with MongoDB, and to iteratively improve our datastructure design.
+		As a result, the prototype consists of three components: a MongoDB instance, a Python module that interfaced with the database, and a second Python application to serve as a rudimentary frontend. 
+		This configuration has been chosen to be relatively close to how \opendc{} already implements its database connections, which also uses a Python module to abstract away most database interactions.
+
+		MongoDB has been chosen in order to easily facilitate the storage of our JSON objects.
+		MongoDB stores documents in a JSON-like format internally, and has strong library support for inserting, modifying and exporting said documents, making it relatively straightforward to re-implement our database connection.
 	
 	\subsection{The process of implementing the prototype}
 
