@@ -1,36 +1,36 @@
 sudo: required
 dist: trusty
-
 branches:
   only:
-    - master
-
+  - master
 
 before_install:
-- sudo apt-get -qq update && sudo apt-get install -y --no-install-recommends texlive-fonts-recommended texlive-latex-extra texlive-fonts-extra dvipng texlive-latex-recommended texlive-full
+- sudo apt-get -qq update && sudo apt-get install -y --no-install-recommends texlive-fonts-recommended
+  texlive-latex-extra texlive-fonts-extra dvipng texlive-latex-recommended texlive-full
 - chmod +x compile.sh
+
 script:
-- ./compile.sh
+- "./compile.sh"
+
 before_deploy:
-      # Set up git user name and tag this commit
-      - git config --local user.name "Travis CI"
-      - git config --local user.email "travis@travis-ci.org"
-      - git tag "$(date +'%Y%m%d%H%M')-$(git log --format=%h -1)"
+- git config --local user.name "Travis CI"
+- git config --local user.email "travis@travis-ci.org"
+- git tag "$(date +'%Y%m%d%H%M')-$(git log --format=%h -1)"
+
 deploy:
   provider: releases
-  api_key: $GITHUB_OAUTH
-  file_glob: true
+  api_key:
+    secure: GX68ubLeRROsCLRwoUi3viGnLl+LBJ2C9HmrtNfKmo0rW75NZkZPEnDTkcT7sxoPXKw8E8h8sQGf4dJmrhYiTW/uc+EH2AKdnppxB64yZ8zsVaE5SqoAjv8hu5FJ2ASIqrGTEVbGeySwZEFjTF4FKxta58pngnNYBlIWW7QNRxMcvGC6h03GtDNyAPJhCAtaegHNzHo/jnlmxh5Fjvn/snxs5MTba5lZDg+/j5q1aXQP6zrN6G11KhhTNVfyrE0tB8VY4H2pXErhuqYGOmQ/s7YXxgDfAcYk3BjTjbVYXP/hVz13XgX5pnxDpmCfPuskhWneLHOlW0BJZICqW6GEiKTs3iBqpRR5lfEbxF+Zsx/1jMc7pW353pv8KRghYvUkcqHpOBZTlJgVIOl0wOARSP457bMcz+iiyz8gYXp2/uSkNOz0lZIpwBZspiHN+MSbsMuAOdx+opNGJz43KqSKFvvvcZpOBHbn1NRzPVimoeTLeVBOucLQjNpiwFLgH3EXXADBlI0B24jg3MB1auTwONafS82Sf/H+Zf80nIjjCGhyiAmR+uw6qbLAgJcROFPSPGz5tHEk8apbEdXWtgESIP39JFolhOfSJeOXaxExd4XjNmdCvtOsR/2XATvEys4b1BOHDx/7im9L5ElyrggHfzFE0lxCEpEod/fEbbPoahg=
   file: main.pdf
-  skip_cleanup: true
   on:
     repo: jc0b/Bachelor-Thesis
+  skip_cleanup: 'true'
 
-#discord channel integration, I should probably mirror this sh file somewhere just in case    
 after_success:
-  - wget http://assets.jacobsburley.com/send.sh
-  - chmod +x send.sh
-  - ./send.sh success $WEBHOOK_URL
+- wget http://assets.jacobsburley.com/send.sh
+- chmod +x send.sh
+- "./send.sh success $WEBHOOK_URL"
 after_failure:
-  - wget http://assets.jacobsburley.com/send.sh
-  - chmod +x send.sh
-  - ./send.sh failure $WEBHOOK_URL
+- wget http://assets.jacobsburley.com/send.sh
+- chmod +x send.sh
+- "./send.sh failure $WEBHOOK_URL"
