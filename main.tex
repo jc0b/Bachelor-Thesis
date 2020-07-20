@@ -106,9 +106,12 @@ Will be written last.
 		In this way, the reasoning behind component choices has to be expressed by the individual, rather than \opendc{} itself.  
 
 		With the implementation of prefabricated components (prefabs), hardware choices can be made by \opendc{}, with the user simply specifying which workload(s) they want to run.
-		Prefabs would be  complete collections of components intended for a specific workload, so that all that would be needed to design a datacenter was knowledge of its intended purpose.
-		A user could then ask \opendc{} to design a complete system for a specified workload, but they could also design their own system using component recommendations from \opendc{}.  
-		The scale of prefabs could range between a single server up to a rack full of servers, or even a room full of equipment. 
+		Prefabs would be then be complete collections of components intended for a specific workload, so that all that would be needed to design a datacenter was knowledge of its intended purpose.
+		A user could then drag and drop the components required for certain services into their datacenter design, which would provide at least a starting point to build off of, allowing for accelerated prototyping.
+
+		Because workloads scale, prefabs can scale with them.
+		Prefabs could consist of a single server, but could also scale up to a rack full of servers, or even a room full of equipment.
+		This approach would enable users reliant on homogenous hardware configurations to save their standard configurations as prefabs, further saving time when they need to add more of the same kind of node in new designs.
 	
 	\subsection{Research Questions}
 		In this thesis, we aim to improve the ease of use of \opendc{}, while also implementing a new, easily-expandable representation of datacenter hardware that allows for accurate technical descriptions of hardware. 
@@ -152,14 +155,14 @@ Will be written last.
 	\subsection{A Topological View of Datacenters}
 		In general, individuals working with datacenters think about their datacenter in terms of its topology. 
 		Often, this takes the form of a network topology \cite{Couto2012}, where a spanning tree is built from all of the participating nodes. 
-		\begin{figure}[ht]
+		\begin{figure}[htb]
 			\centering
 			\includegraphics[width=8cm]{couto2012/Fat-tree-with-4-port-switches-n-4.png}
 			\caption[A conventional network-focussed datacenter topology]{A conventional network-focussed datacenter topology \cite{Couto2012}}
 		\end{figure}
-		For \opendc{}, however, it is important to consider the parent-child relationships between the hardware itself. 
-		For example, we can consider a chassis residing within a given rack to be a child of that rack.
-		In this way, we can build our own spanning tree model, which allows us to easily manipulate parent objects and all of their children by simply moving the parent object elsewhere in the tree, reshaping our topology.
+		For \opendc{}, however, it is important to consider the parent-child relationships between the hardware components themselves. 
+		For example, we can consider a chassis residing within a given rack to be a child of that rack, with good datacenter practice requiring that an in-use chassis is not kept outside of a rack.
+		By defining these inter-component relationships, we can build our own spanning tree model, which allows us to easily manipulate parent objects and all of their children by simply moving the parent object elsewhere in the tree, reshaping our topology.
 	
 	\subsection{Modularity in Computing}
 		In software architecture, it is becoming increasingly common to rely on frameworks and libraries written by others in the software engineering community. 
@@ -186,7 +189,18 @@ Will be written last.
 		With prefabs, it would be straightforward to create a prefab that is representative of a given performance tier, and then clone it when performing capacity planning during periods of growth.
 	
 	\subsection{Formats for Specifying Prefabs}
+		We consider several formats for representing our datastructure.
+		\todojacob{Rewrite in progress}
+		First, we consider \textit{YAML Ain't Markup Language} (YAML) as our document format.
+		YAML is both human as well as machine readable, and supports nested object hierarchies.
+		However, we find that YAML is not suitably human-readable.
+		It relies on indentation for distinguishing levels of hierarchy, with no clear boundaries delimiting separate objects.
 
+		\textit{Extensible Markup Language} (XML) is a common language for storing and representing documents that is used in many web applications.
+		It is both human and machine readable by design, and is well suited to nested object hierarchies, making it a strong contender to be used to store prefabs.
+		However, XML requires parsing.
+		The current \opendc{} frontend is written in \verb|ReactJS|, which does not natively support parsing XML without the use of an external library.
+		As we prefer not to add additional dependencies to \opendc{}, we do not find XML to be a suitable choice as a document format.
 	\subsection{Domain-Specific Prefabs}
 
 
@@ -201,10 +215,11 @@ Will be written last.
 		Brands of hardware are not necessary in order to simulate workloads, but they are useful when a user is making design decisions, or presenting their design to a wider audience.
 	
 	\subsection{A definition and design of a datastructure for storing prefabs}
+		\todojacob{Rewrite}
 		In order to store our datacenter hardware representation within \opendc{}, we define a datastructure to represent the datacenter hardware. 
 		This datastructure aims to be simple to understand, as well as easily expandable in order to represent hardware configurations that we do not focus on in this research (i.e. blade servers, or other chassis that may contain multiple/unconventional motherboards). 
 		For this reason, we choose to use JavaScript Object Notation (JSON) to store our datastructure. 
-		This supports our goals of ease of use and expandibility, as JSON is both human-readable, 
+		This supports our goals of ease of use and expandibility, as JSON is both human-readable... 
 	
 	\subsection{Designing ways to create and interact with prefabs}
 
