@@ -189,6 +189,21 @@ Will be written last.
 		With prefabs, it would be straightforward to create a prefab that is representative of a given performance tier, and then clone it when performing capacity planning during periods of growth.
 	
 	\subsection{Formats for Specifying Prefabs}
+		When considering a new format for representing our new datastructure, we must first identify the important qualities that a suitable format must have. 
+		A functional requirement for the format is that it must support nested objects. 
+
+		The current \opendc{} database uses 35 SQL tables, 20 of which are used to store topologies.
+		As a result, adding hardware items to the database requires a complex set of queries, with deletions and modifications requiring additional queries.
+		In order to reduce the complexity associated with \opendc{}, we seek a storage format that allows us to store entire prefabs (as well as topologies) within a single object.
+		The advantage of such an approach is that the database then only has to support the adding, updating and deleting of prefabs.
+
+		In order to further the goal of simplifying working with \opendc{}, we also transition the storage database away from SQL, towards a noSQL design.
+		We choose MongoDB as a document storage solution due to its ease of use, as well as its flexibility.
+		MongoDB supports the insertion of JavaScript Object Notation (JSON) objects.
+		JSON is an expressive, industry-standard object storage format that is widely used in web-based applications.
+		It is both human-readable, and supports nested object hierarchies.
+		As a result, it meets our functional requirements.
+
 		We consider several formats for representing our datastructure.
 		\todojacob{Rewrite in progress}
 		First, we consider \textit{YAML Ain't Markup Language} (YAML) as our document format.
@@ -201,7 +216,24 @@ Will be written last.
 		However, XML requires parsing.
 		The current \opendc{} frontend is written in \verb|ReactJS|, which does not natively support parsing XML without the use of an external library.
 		As we prefer not to add additional dependencies to \opendc{}, we do not find XML to be a suitable choice as a document format.
+	
 	\subsection{Domain-Specific Prefabs}
+		Datacenters have many intended uses, depending on the intended domain of the datacenter.
+		The design of datacenters, as well as the component choices made during the design process, varies significantly depending on the intended use.
+		Some datacenter owners choose to focus on a hyperconverged infrastructure, where a many-core approach is taken to provide sufficient resources to virtualize much of the environment.
+		In such a scenario, hardware is not chosen based on the suitability for one application, but to support the flexibility to be able to run any application in virtual machines.
+		This is especially common in industry, with the intention of reducing downtime.
+		Virtual machines can be migrated between physical hosts while still running when hardware maintenance is required.
+		It is also possible to add resources to a virtual machine without power loss, dynamically scaling them to jobs.
+
+		Conversely, other datacenter owners may focus on High-Performance Computing (HPC).
+		These datacenters are designed differently, with a high number of nodes running a baremetal operating system.
+		The configuration of these nodes varies, depending on the intended use of the node.
+		Nodes are then categorized into performance tiers based on their intended use.
+		Performance tiers are then chosen by customers depending on the kind of workload they want to run - for example, GPUs may be installed in the nodes in tiers intended for Machine Learning workloads.
+
+		Prefabs specific to certain domains can be represented in \opendc{}, with different performance tiers included within each domain.
+		In this way, users can easily build massive, homogenous systems by selecting the node specific to their performance target, and using it as a starting point.
 
 
 \section{A Design for a Representation of Data Center Hardware}
@@ -209,10 +241,11 @@ Will be written last.
 	\subsection{A model for datacenter representation}
 		In this research, we provide a model for representing datacenter hardware. 
 		This model is not the first of its kind: Andreadis et al created a model for datacenter hardware in order to model scheduling in \opendc{} \cite{Andreadis2018}. 
-		Our model, however, offers more detail. 
+		Our model, however, offers more detail, storing more characteristics of the hardware within.
 		When designing the model, it is important to consider that a large part of its purpose is to increase usability of \opendc{}. 
 		As a result, we choose to represent lots of hardware characteristics that are not used by the simulator, but provide useful information to the user. 
 		Brands of hardware are not necessary in order to simulate workloads, but they are useful when a user is making design decisions, or presenting their design to a wider audience.
+		Conversely, performance metrics such as how many millions of instructions per second (MIPS) a processor can execute are of utmost importance to the simulator when extrapolating performance numbers, but are generally meaningless to stakeholders without a technology background.
 	
 	\subsection{A definition and design of a datastructure for storing prefabs}
 		\todojacob{Rewrite}
