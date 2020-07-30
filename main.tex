@@ -252,10 +252,14 @@ Will be written last.
 		In order to store our datacenter hardware representation within \opendc{}, we define a datastructure to represent the datacenter hardware. 
 		This datastructure aims to be simple to understand, as well as easily expandable in order to represent hardware configurations that we do not focus on in this research (i.e. blade servers, or other chassis that may contain multiple/unconventional motherboards). 
 		For this reason, we choose to use JavaScript Object Notation (JSON) to store our datastructure. 
-		This supports our goals of ease of use and expandibility, as JSON is both human-readable... 
-	
-	\subsection{Designing ways to create and interact with prefabs}
+		This supports our goals of ease of use and expandibility, as JSON is a human-readable industry-standard object storage format that can be extended to represent a variety of objects.
+		\todojacob{Reword the above line}
 
+
+
+	\subsection{Designing ways to create and interact with prefabs}
+		When determining interactions we prefabs, we must define a set of operations that is sufficient to execute the intended purpose of prefabs.
+		
 \section{Implementation of a Prototype}
 
 	\subsection{Why prototype?}
