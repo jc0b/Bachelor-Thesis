@@ -105,11 +105,13 @@ Will be written last.
 		This requires a high level of technical understanding, and relies solely on the user's knowledge of the intended workload when component choices are made. 
 		In this way, the reasoning behind component choices has to be expressed by the individual, rather than \opendc{} itself.  
 
-		With the implementation of prefabricated components (prefabs), hardware choices can be made by \opendc{}, with the user simply specifying which workload(s) they want to run.
-		Prefabs would be then be complete collections of components intended for a specific workload, so that all that would be needed to design a datacenter was knowledge of its intended purpose.
-		A user could then drag and drop the components required for certain services into their datacenter design, which would provide at least a starting point to build off of, allowing for accelerated prototyping.
+		With the implementation of prefabricated components (\textit{prefabs}), complete collections of components intended for a specific workload can be "dragged and dropped" into datacenter design, allowing for accelerated prototyping.
+		In this way, hardware choices can be made by \opendc{}, with the user simply specifying which workload(s) they want to run.
+		As a result, all a user would need to know to begin designing a datacenter would be its intended purpose, and the workloads it would be required to run.
+		% A user could then "drag and drop" the components required for certain services into their datacenter design, which would provide at least a starting point to build off of, allowing for accelerated prototyping.
 
-		Because workloads scale, prefabs can scale with them.
+		When working with scalable workloads, prefabs can also provide benefits.
+		If the workload relies on homogenous nodes, these nodes can be defined as prefabs, and added into the design as needed for capacity testing.
 		Prefabs could consist of a single server, but could also scale up to a rack full of servers, or even a room full of equipment.
 		This approach would enable users reliant on homogenous hardware configurations to save their standard configurations as prefabs, further saving time when they need to add more of the same kind of node in new designs.
 	
@@ -119,7 +121,7 @@ Will be written last.
 		\todojacob{Reword the RQs to flow a little better and be a little clearer.}
 		\begin{itemize}
 			\item [\textbf{RQ1:}] How do we design a prefab abstraction that accurately describes important technical and composable features?
-			\item [\textbf{RQ2:}] How to further allow operations, extensions, and the sharing of data?
+			\item [\textbf{RQ2:}] How to further allow operations and extensions of prefabs, and the sharing of data?
 			\item [\textbf{RQ1:}] How can we test and validate the use of prefabs to define hyperconverged/HPC datacenter topologies?
 		\end{itemize}
 	
@@ -153,16 +155,25 @@ Will be written last.
 \section{Background} \label{sec:background}
 
 	\subsection{A Topological View of Datacenters}
-		In general, individuals working with datacenters think about their datacenter in terms of its topology. 
-		Often, this takes the form of a network topology \cite{Couto2012}, where a spanning tree is built from all of the participating nodes. 
-		\begin{figure}[htb]
+		\begin{figure}[ht!]
 			\centering
 			\includegraphics[width=8cm]{couto2012/Fat-tree-with-4-port-switches-n-4.png}
-			\caption[A conventional network-focussed datacenter topology]{A conventional network-focussed datacenter topology \cite{Couto2012}}
+			\caption[A conventional network-focussed datacenter topology]{A conventional network-focused datacenter topology \cite{Couto2012}}
+			\label{fig:networktopology}
 		\end{figure}
+		In general, individuals working with datacenters think about their datacenter in terms of its topology. 
+		Often, this takes the form of a network topology \cite{Couto2012}, where a spanning tree is built from all of the participating nodes. 
 		For \opendc{}, however, it is important to consider the parent-child relationships between the hardware components themselves. 
 		For example, we can consider a chassis residing within a given rack to be a child of that rack, with good datacenter practice requiring that an in-use chassis is not kept outside of a rack.
 		By defining these inter-component relationships, we can build our own spanning tree model, which allows us to easily manipulate parent objects and all of their children by simply moving the parent object elsewhere in the tree, reshaping our topology.
+		\begin{figure}[ht!]
+			\centering
+			\includegraphics[width=8cm]{opendc-topology.png}
+			\caption[A simple topology in OpenDC]{A simple topology in OpenDC}
+			\label{fig:example-opendc-topology}
+		\end{figure}
+		\thoughts{I've chosen to not include details such as racks being children to tiles in this figure, because a) its quite early in the thesis and b) I don't think including details such as tiles is particularly relevant for the comparison (or for prefabs themselves). What do you think?}
+
 	
 	\subsection{Modularity in Computing}
 		In software architecture, it is becoming increasingly common to rely on frameworks and libraries written by others in the software engineering community. 
@@ -172,6 +183,7 @@ Will be written last.
 		It is usually not necessary to understand the full workings of such a library, as the benefit comes from its utility in meeting certain requirements. 
 		We can view these software modules as prefabricated software, which an individual may add into their project with ease. 
 		Such a module may be added manually, by copying the relevant source files into the project, or may be added by means of a package manager.
+		
 		\verb|npm| is a package manager for \verb|node.js| that seeks to make installing dependencies much easier for developers \cite{Wittern2016}.
 		For open-source projects a developer can include a file listing all of the external packages they used in their project, as well as the specific versions of each of these packages, so that another individual can easily run the authors software on their own machine.
 		\verb|npm| also enables package authors to publish their packages in an online registry, so that other developers may download and use them.
@@ -182,12 +194,6 @@ Will be written last.
 		Customers can then easily add a pre-configured VPS to their environment, without having to worry about operating system installation, configuration, or maintenance. 
 		Templates provided through the platform are typically created by the vendors of the software used in each template, and are thus of high quality and suitability for the application.
 	
-	\subsection{The Goal of Prefabs}
-		Users of \opendc{} would benefit from prefabs in much the same way, only having to focus on which services they want to run in their datacenter.
-		Large datacenter providers using \opendc{} may also see a benefit. 
-		Cloud service providers who provide IaaS services typically use homogenous hardware configurations, with different configurations for each performance tier. 
-		With prefabs, it would be straightforward to create a prefab that is representative of a given performance tier, and then clone it when performing capacity planning during periods of growth.
-	
 	\subsection{Formats for Specifying Prefabs}
 		When considering a new format for representing our new datastructure, we must first identify the important qualities that a suitable format must have. 
 		A functional requirement for the format is that it must support nested objects. 
@@ -196,13 +202,6 @@ Will be written last.
 		As a result, adding hardware items to the database requires a complex set of queries, with deletions and modifications requiring additional queries.
 		In order to reduce the complexity associated with \opendc{}, we seek a storage format that allows us to store entire prefabs (as well as topologies) within a single object.
 		The advantage of such an approach is that the database then only has to support the adding, updating and deleting of prefabs.
-
-		In order to further the goal of simplifying working with \opendc{}, we also transition the storage database away from SQL, towards a noSQL design.
-		We choose MongoDB as a document storage solution due to its ease of use, as well as its flexibility.
-		MongoDB supports the insertion of JavaScript Object Notation (JSON) objects.
-		JSON is an expressive, industry-standard object storage format that is widely used in web-based applications.
-		It is both human-readable, and supports nested object hierarchies.
-		As a result, it meets our functional requirements.
 
 		We consider several formats for representing our datastructure.
 		\todojacob{Rewrite in progress}
@@ -235,10 +234,31 @@ Will be written last.
 		Prefabs specific to certain domains can be represented in \opendc{}, with different performance tiers included within each domain.
 		In this way, users can easily build massive, homogenous systems by selecting the node specific to their performance target, and using it as a starting point.
 
+\newpage
 
-\section{A Design for a Representation of Data Center Hardware}
+\section{A Design for a Representation of Data Center Hardware} \label{sec:design}
+	
+	\subsection{The Goal of Prefabs: Requirements Analysis}
+		When designing our new datastructure, it is important to consider the potential use-cases for key stakeholders.
+		We identify our stakeholders to be researchers in the fields of distributed or large-scale computer systems, students in the same field, and datacenter operators in both industrial and academic settings.
 
-	\subsection{A model for datacenter representation}
+		Both researchers and students would benefit from the addition of prefabs to \opendc{} in the same way that developers (and other customers) benefit from modern PaaS offerings, only having to focus on which services they want to run in their datacenter.
+		Additionally, datacenter operators using \opendc{} for datacenter design and testing may also see a benefit from prefabs. 
+		Cloud service providers who provide IaaS services typically use homogenous hardware configurations, with different configurations for each performance tier. 
+		With prefabs, it would be straightforward to create a prefab that is representative of a given performance tier, and then clone it when performing capacity planning during periods of growth.
+		Lastly, given the widespread support for the sharing of information within academia, the ability to share prefabs would be an important addition to the features of \opendc{}.
+
+		From these use-cases, we can already define some functional requirements for prefabs.
+		\begin{itemize}
+			\item [\textbf{FR1:}] Users should be able to use existing topology definitions as a basis for new prefabs.
+			\item [\textbf{FR2:}] Users should be able to add prefabs into existing topologies, using them as building blocks to enable faster prototyping and design.
+			\item [\textbf{FR3:}] Users should be able to determine what tasks a given prefab is suited for, by means of some kind of labelling (i.e. prefabs intended for highly parallelizable workloads).
+			\item [\textbf{FR4:}] Users should be able to easily share their prefab designs with others.
+		\end{itemize}
+
+	\thoughts{This needs to feel a little more fluid}
+
+	\subsection{A Model for Datacenter Representation}
 		In this research, we provide a model for representing datacenter hardware. 
 		This model is not the first of its kind: Andreadis et al created a model for datacenter hardware in order to model scheduling in \opendc{} \cite{Andreadis2018}. 
 		Our model, however, offers more detail, storing more characteristics of the hardware within.
@@ -247,7 +267,7 @@ Will be written last.
 		Brands of hardware are not necessary in order to simulate workloads, but they are useful when a user is making design decisions, or presenting their design to a wider audience.
 		Conversely, performance metrics such as how many millions of instructions per second (MIPS) a processor can execute are of utmost importance to the simulator when extrapolating performance numbers, but are generally meaningless to stakeholders without a technology background.
 	
-	\subsection{A definition and design of a datastructure for storing prefabs}
+	\subsection{A Definition and Design of a Datastructure for Storing Prefabs}
 		\todojacob{Rewrite}
 		In order to store our datacenter hardware representation within \opendc{}, we define a datastructure to represent the datacenter hardware. 
 		This datastructure aims to be simple to understand, as well as easily expandable in order to represent hardware configurations that we do not focus on in this research (i.e. blade servers, or other chassis that may contain multiple/unconventional motherboards). 
@@ -255,13 +275,25 @@ Will be written last.
 		This supports our goals of ease of use and expandibility, as JSON is a human-readable industry-standard object storage format that can be extended to represent a variety of objects.
 		\todojacob{Reword the above line}
 
+		In order to further the goal of simplifying working with \opendc{}, we also transition the storage database away from SQL, towards a noSQL design.
+		We choose MongoDB as a document storage solution due to its ease of use, as well as its flexibility.
+		MongoDB supports the insertion of JavaScript Object Notation (JSON) objects.
+		JSON is an expressive, industry-standard object storage format that is widely used in web-based applications.
+		It is both human-readable, and supports nested object hierarchies.
+		As a result, it meets our functional requirements.
+
+		The author of this thesis was involved in the transition from SQL to noSQL, which involved the porting of the current database schema to MongoDB. 
+		This effort also involved porting the existing \opendc{} API from Python 2.7 to Python 3, and rewriting the API to include new endpoints for prefabs, as well as the new topology structure.
 
 
-	\subsection{Designing ways to create and interact with prefabs}
+	\subsection{Designing Ways to Create and Interact with Prefabs}
 		When determining interactions we prefabs, we must define a set of operations that is sufficient to execute the intended purpose of prefabs.
-		
-\section{Implementation of a Prototype}
 
+\newpage
+
+\section{Implementation of a Prototype} \label{sec:implementation}
+	In this section, we describe the prototyping stage of this project.
+	We cover the motivations behind prototyping, as well as the processes of designing, implementing and testing the prototype.
 	\subsection{Why prototype?}
 		Prototyping is an important part of our design process for implementing the new topologies in \opendc{}.
 		The design proposal requires the implementation of certain new technologies (such as MongoDB) which we are unfamiliar with.
@@ -276,20 +308,25 @@ Will be written last.
 		MongoDB has been chosen in order to easily facilitate the storage of our JSON objects.
 		MongoDB stores documents in a JSON-like format internally, and has strong library support for inserting, modifying and exporting said documents, making it relatively straightforward to re-implement our database connection.
 	
-	\subsection{The process of implementing the prototype}
-
+	\subsection{The Process of Implementing the Prototype}
+		\thoughts{Is this with regard to writing the prototype? Because then I wonder if we can merge this with the above.}
 	\subsection{Validating Prototypes}
 
-	\subsection{Lessons learned}
+	\subsection{Lessons Learned}
 		During prototyping, we learnt many things that influenced the decisions we made during the implementation phase.
 		We also learnt a lot about the differences between MongoDB and SQL, which allowed us to improve how we implement this new database technology throughout \opendc{}.
 
-\section{Evaluation of Design \& Implementation}
+\newpage
 
+\section{Evaluation of Design \& Implementation} \label{sec:evaluation}
+
+
+
+\newpage
 
 \section{Conclusion} \label{sec:conclusion}
 
-\section{Future Work}
+\section{Future Work} \label{sec:future-work}
 	\todojacob{Adding this here for now, will likely merge future work into conclusion at a later date.}
 	Looking forward, it would be beneficial for \opendc{} to simulate user-specified workloads on systems designed by \opendc{} itself. 
 	\opendc{} would be able to leverage a large database of performance data to make component choices based on the workload specified by the user. 
