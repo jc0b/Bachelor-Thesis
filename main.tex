@@ -87,7 +87,7 @@ Will be written last.
 		When architecting data centers, many stakeholders must come together and agree on the various specifications of the data center, each with their own unique set of requirements. 
 		System architects will then begin to design a system that meets these requirements. 
 		However, such projects also have constraints. 
-		Designing a data center isn't as easy as buying servers that meet the requirements of the stakeholders and putting them into use. 
+		Designing a data center is not as easy as buying servers that meet the requirements of the stakeholders and putting them into use. 
 		Constraints such as budget or physical space often influence design decisions, with smaller data centers perhaps comprising of higher-density compute nodes. 
 		Designing data centers is often a complex problem, for which no validated analytical models exist. 
 		Despite some academic institutions often being forthcoming with the technologies used in their data centers, there is no one-size-fits-all approach for data center design, making it hard to determine what hardware you need for a given workload.
@@ -188,6 +188,7 @@ Will be written last.
 		For open-source projects a developer can include a file listing all of the external packages they used in their project, as well as the specific versions of each of these packages, so that another individual can easily run the authors software on their own machine.
 		\verb|npm| also enables package authors to publish their packages in an online registry, so that other developers may download and use them.
 		It follows, then, that it would be helpful to be able to describe datacenter hardware, and share these descriptions, in such a way. 
+
 		With the advent of PaaS and particularly SaaS offerings from major cloud providers, developers can implement entire layers of their software stack with just a few clicks. 
 		These layers still run in virtual machines, but the developer does not need to concern themselves too much with building or maintain the hardware or operating system.
 		This concept is already offered by some cloud providers: DigitalOcean is a Virtual Private Server (VPS) provider that harnesses a "marketplace" of pre-configured VPS templates (known as "1-Click Apps") in order to simplify use of the platform \cite{DigitalOcean2020}. 
@@ -205,12 +206,12 @@ Will be written last.
 
 		We consider several formats for representing our datastructure.
 		\todojacob{Rewrite in progress}
-		First, we consider \textit{YAML Ain't Markup Language} (YAML) as our document format.
+		First, we consider \textit{YAML Ain't Markup Language} (YAML) \footnote{\url{https://yaml.org/spec/1.2/spec.html}} as our document format.
 		YAML is both human as well as machine readable, and supports nested object hierarchies.
 		However, we find that YAML is not suitably human-readable.
 		It relies on indentation for distinguishing levels of hierarchy, with no clear boundaries delimiting separate objects.
 
-		\textit{Extensible Markup Language} (XML) is a common language for storing and representing documents that is used in many web applications.
+		\textit{Extensible Markup Language} (XML) \footnote{\url{http://www.w3.org/TR/REC-xml}} is a common language for storing and representing documents that is used in many web applications.
 		It is both human and machine readable by design, and is well suited to nested object hierarchies, making it a strong contender to be used to store prefabs.
 		However, XML requires parsing.
 		The current \opendc{} frontend is written in \verb|ReactJS|, which does not natively support parsing XML without the use of an external library.
@@ -287,7 +288,8 @@ Will be written last.
 
 
 	\subsection{Designing Ways to Create and Interact with Prefabs}
-		When determining interactions we prefabs, we must define a set of operations that is sufficient to execute the intended purpose of prefabs.
+		When determining interactions we prefabs, we must define a set of operations that meets the functional requirements defined earlier.
+		
 
 \newpage
 
@@ -310,17 +312,36 @@ Will be written last.
 	
 	\subsection{The Process of Implementing the Prototype}
 		\thoughts{Is this with regard to writing the prototype? Because then I wonder if we can merge this with the above.}
+
 	\subsection{Validating Prototypes}
+		In order to validate our prototype, we needed to determine...
+		\thoughts{KLM testing on prototype}
 
 	\subsection{Lessons Learned}
 		During prototyping, we learnt many things that influenced the decisions we made during the implementation phase.
+
+		Firstly, we opted not to enforce schema validation on the collections within our database.
+		The reasoning behind this decision was that schema validation in the database added unnecessary complexity, and limited the shape of our data (and thus hardware that could be represented).
+		We instead choose to check for required fields (such as the topology name, or the prefab visibility) within the API.
+		This allows for topologies to contain hardware configurations that may not have been considered during the design process, while also allowing us to make assumptions about certain aspects of the datastructure.
+
+		We also became more familiar with certain aspects of MongoDB, including the differences between Binary JSON (BSON) and JSON.
+		When we began working with MongoDB, we operated under the assumption that MongoDB would export objects in JSON, just as it can be given JSON objects to import.
+		However, this assumption turned out to be incorrect. 
+		During testing of topology import functionality, we attempted to import a topology that we had exported to JSON.
+		When this test failed, we discovered that MongoDB does not use pure JSON for exports.
+		Instead, it exports objects in BSON, the same format it uses to store objects internally within the database.
+		MongoDB simply stores files in a binary format internally, and converts them back to something human-readable when you export them. 
+		However, the human-readable format that MongoDB uses is not JSON, but is deceptively similiar: BSON uses single quotes (') where JSON uses double quotes(").
+		As a result, we implemented a conversion from BSON to JSON within our API, so API responses are formatted in proper JSON that can be used by the frontend.
+
 		We also learnt a lot about the differences between MongoDB and SQL, which allowed us to improve how we implement this new database technology throughout \opendc{}.
+		We moved from a database structure consisting of many tables, to one with very few.
+
 
 \newpage
 
 \section{Evaluation of Design \& Implementation} \label{sec:evaluation}
-
-
 
 \newpage
 
@@ -328,9 +349,20 @@ Will be written last.
 
 \section{Future Work} \label{sec:future-work}
 	\todojacob{Adding this here for now, will likely merge future work into conclusion at a later date.}
-	Looking forward, it would be beneficial for \opendc{} to simulate user-specified workloads on systems designed by \opendc{} itself. 
+	Looking forward, there are several areas of interest that it would be beneficial to visit in future research.
+
+	Firstly, it would be interesting to design a means for \opendc{} to simulate user-specified workloads on systems designed by \opendc{} itself. 
 	\opendc{} would be able to leverage a large database of performance data to make component choices based on the workload specified by the user. 
+	\opendc{} could even be taught how to perform such a task, using Machine Learning with existing datacenter designs as training models.
 	In this way, the system would be designed for the best objective performance at the specified workload, potentially adherent to specified constraints such as financial or power budget.
+	If desired, the level of user interaction could be minimal to none, perhaps only requiring small changes to the design.
+
+	Secondly, there are many more characteristics of datacenter hardware that we could extend \opendc{} to represent. 
+	We do not focus on high-density servers with multiple mainboards (such as blade servers) in each chassis in this thesis. 
+	In addition, we could extend rack prefabs to include networking hardware required for the topology. 
+
+
+
 
 
 \newpage
