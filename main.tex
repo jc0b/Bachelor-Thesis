@@ -33,8 +33,8 @@ Vrije Universiteit Amsterdam
 \vspace*{1.5cm}
 
 \rule{.9\linewidth}{.6pt}\\[0.4cm]
-{\huge \bfseries Title of the Research Project\par}
-{\huge \bfseries Comes Here\par}\vspace{0.4cm}
+{\huge \bfseries LEGO, but with Servers:\par}
+{\Large \bfseries Creating the Building Blocks Required to Design Datacenters\par}\vspace{0.4cm}
 \rule{.9\linewidth}{.6pt}\\[1.5cm]
 
 \vspace*{2mm}
@@ -78,35 +78,35 @@ Will be written last.
 \section{Introduction} \label{sec:introduction}
 	
 	\subsection{\opendc{}}
-		With the rapid expansion in the use of cloud services by both consumers and businesses \cite{Kushida2015}\cite{mokhtar2013}, the data centers that house these services must also grow. 
-		While many may not see the cloud in its physical manifestation, cloud services are provided by servers, and servers are typically stored in data centers. 
+		With the rapid expansion in the use of cloud services by both consumers and businesses \cite{Kushida2015}\cite{mokhtar2013}, the datacenters that house these services must also grow. 
+		While many may not ever see the cloud in in terms of its underlying hardware, cloud services are provided by servers, and servers are typically stored in datacenters. 
 		The configuration of such servers varies drastically, depending on the intended workload. 
 		Relational databases, for example, can have large memory requirements. 
-		Likewise, file servers may not need a particularly powerful CPU, but do require a lot of disks, and perhaps even a network card with higher throughput.
+		Likewise, file servers may not need a particularly powerful CPU, but do require a lot of disks, and perhaps even a network card with higher maximum throughput.
 
-		When architecting data centers, many stakeholders must come together and agree on the various specifications of the data center, each with their own unique set of requirements. 
+		When architecting datacenters, many stakeholders must come together and agree on the various specifications of the data center, each with their own unique set of requirements. 
 		System architects will then begin to design a system that meets these requirements. 
 		However, such projects also have constraints. 
 		Designing a data center is not as easy as buying servers that meet the requirements of the stakeholders and putting them into use. 
-		Constraints such as budget or physical space often influence design decisions, with smaller data centers perhaps comprising of higher-density compute nodes. 
-		Designing data centers is often a complex problem, for which no validated analytical models exist. 
-		Despite some academic institutions often being forthcoming with the technologies used in their data centers, there is no one-size-fits-all approach for data center design, making it hard to determine what hardware you need for a given workload.
+		Constraints such as budget or physical space often influence design decisions, with smaller (metropolitan) datacenters with less floor space sometimes making use of higher-density compute nodes, such as blade servers. 
+		Designing datacenters is often a complex problem, for which no validated analytical models exist. 
+		Despite some academic institutions often being forthcoming with the technologies used in their datacenters, there is no one-size-fits-all approach for data center design, making it hard to determine what hardware you need for a given set of workloads.
 		
 		We focus in this work on \opendc{}, an open-source Discrete Event Simulator used to simulate the performance of workloads on massive computer systems. 
-		Its purpose is to assist in performance testing of data centers designed by users, with the intention that the information gained can be factored in when these systems are being designed. 
+		Its purpose is to assist in performance testing of datacenters designed by users, with the intention that the information gained can be factored in when these systems are being designed. 
 		\opendc{} simulates workloads using traces from the Grid Workload Archive \cite{Iosup2008}, which are provided by participants who contribute to the archive. 
-		These traces provide metadata about the scheduling requirements of jobs frequently sent to data centers, such as CPU usage throughout a job. 
-		Using this information, \opendc{} can simulate the speed with which a workload will complete, as well as resource usage throughout the workload. 
+		These traces provide metadata about the scheduling requirements of jobs frequently sent to datacenters, such as CPU usage throughout a job. 
+		Using this information in combination with information about the hardware being simulated, \opendc{} can simulate the speed with which a workload will complete, as well as resource usage throughout the workload. 
 		These simulations can assist businesses and educational institutions in highlighting and addressing performance concerns in their next-generation environments before any hardware has even been purchased.
 	
 	\subsection{Problem}
 		In its current state, \opendc{} can be used to simulate user-specified workloads on user-designed systems. 
-		Users must specify each individual component used, and build out an entire system. 
-		This requires a high level of technical understanding, and relies solely on the user's knowledge of the intended workload when component choices are made. 
+		Users must specify each individual component used, and build out an entire system, effectively doing all of the design work themselves. 
+		This requires a high level of technical understanding, and relies solely on the user's knowledge of the intended workload to make component choices. 
 		In this way, the reasoning behind component choices has to be expressed by the individual, rather than \opendc{} itself.  
 
-		With the implementation of prefabricated components (\textit{prefabs}), complete collections of components intended for a specific workload can be "dragged and dropped" into datacenter design, allowing for accelerated prototyping.
-		In this way, hardware choices can be made by \opendc{}, with the user simply specifying which workload(s) they want to run.
+		With the implementation of prefabricated components (\textit{prefabs}), complete collections of components intended for a specific workload can be "dragged and dropped" into a datacenter design, allowing for accelerated prototyping.
+		In this way, hardware choices can be made by \opendc{}, based on which workload(s) the user wants to run.
 		As a result, all a user would need to know to begin designing a datacenter would be its intended purpose, and the workloads it would be required to run.
 		% A user could then "drag and drop" the components required for certain services into their datacenter design, which would provide at least a starting point to build off of, allowing for accelerated prototyping.
 
@@ -130,6 +130,7 @@ Will be written last.
 		Next, we seek to understand the components that are important to represent in the datastructure, as well as identify components we no longer need to represent.
 		From here, we examine a variety of common methods of representing data, and assess their suitability towards our desired way of representing datacenter hardware.
 		Following on from this, we present a datastructure design, as well as the decisions made during the design process, and validate it through a prototyping stage.
+		We also assess what interactions need to be supported on the datastructure, and ensure that the datastructure design supports these interactions.
 		Lastly, we implement the datastructure design and accompanying technologies into \opendc{}.
 	
 	\subsection{Main Contribution of the Work}
@@ -158,7 +159,7 @@ Will be written last.
 		\begin{figure}[ht!]
 			\centering
 			\includegraphics[width=8cm]{couto2012/Fat-tree-with-4-port-switches-n-4.png}
-			\caption[A conventional network-focussed datacenter topology]{A conventional network-focused datacenter topology \cite{Couto2012}}
+			\caption[A conventional network-focused datacenter topology]{A conventional network-focused datacenter topology \cite{Couto2012}}
 			\label{fig:networktopology}
 		\end{figure}
 		In general, individuals working with datacenters think about their datacenter in terms of its topology. 
@@ -187,13 +188,24 @@ Will be written last.
 		\verb|npm| is a package manager for \verb|node.js| that seeks to make installing dependencies much easier for developers \cite{Wittern2016}.
 		For open-source projects a developer can include a file listing all of the external packages they used in their project, as well as the specific versions of each of these packages, so that another individual can easily run the authors software on their own machine.
 		\verb|npm| also enables package authors to publish their packages in an online registry, so that other developers may download and use them.
-		It follows, then, that it would be helpful to be able to describe datacenter hardware, and share these descriptions, in such a way. 
+		It follows, then, that it would be helpful to be able to describe datacenter hardware, and share these descriptions, in a similiar way. 
 
 		With the advent of PaaS and particularly SaaS offerings from major cloud providers, developers can implement entire layers of their software stack with just a few clicks. 
 		These layers still run in virtual machines, but the developer does not need to concern themselves too much with building or maintain the hardware or operating system.
 		This concept is already offered by some cloud providers: DigitalOcean is a Virtual Private Server (VPS) provider that harnesses a "marketplace" of pre-configured VPS templates (known as "1-Click Apps") in order to simplify use of the platform \cite{DigitalOcean2020}. 
 		Customers can then easily add a pre-configured VPS to their environment, without having to worry about operating system installation, configuration, or maintenance. 
-		Templates provided through the platform are typically created by the vendors of the software used in each template, and are thus of high quality and suitability for the application.
+		Templates provided through the platform are typically created by the vendors of the software used in each template, and are thus of high quality and suitability for the chosen application.
+
+		In the realm of hardware, we are also seeing modularity emerge. 
+		Hewlett Packard Enterprise (HPE) produces a scalable server design, whereby more compute (in terms of CPU, Graphics and Memory) can simply be added as necessary \cite{Bang2020}.
+		A single operating system instance runs on this hardware, which can (at the time of writing) be expanded with up to 32 sockets, each with up to 28 physical cores per socket.
+		It is thus possible to begin with a single system, and simply add "more of the same" when expanding datacenter capacity.
+
+		At a more macro level, Schneider Electric provide prefabricated, modular structures to house, power, and cool datacenters \cite{Torell2014, Torell2017}.
+		While the offering from Schneider Electric does not include recommendations for actual compute hardware, IBM offers the possibility of a completely modular datacenter \cite{IBM2014}.
+		Such a datacenter can quickly be scaled up or down depending on the needs of the customer, using pre-designed components for power, cooling, and floorspace. 
+		These prefab datacenters are real-life examples of how datacenter design can be modular.
+
 	
 	\subsection{Formats for Specifying Prefabs}
 		When considering a new format for representing our new datastructure, we must first identify the important qualities that a suitable format must have. 
@@ -202,7 +214,7 @@ Will be written last.
 		The current \opendc{} database uses 35 SQL tables, 20 of which are used to store topologies.
 		As a result, adding hardware items to the database requires a complex set of queries, with deletions and modifications requiring additional queries.
 		In order to reduce the complexity associated with \opendc{}, we seek a storage format that allows us to store entire prefabs (as well as topologies) within a single object.
-		The advantage of such an approach is that the database then only has to support the adding, updating and deleting of prefabs.
+		The advantage of such an approach is that the database then only has to support the adding, updating and deleting of prefabs (and other topology objects).
 
 		We consider several formats for representing our datastructure.
 		\todojacob{Rewrite in progress}
@@ -219,14 +231,19 @@ Will be written last.
 	
 	\subsection{Domain-Specific Prefabs}
 		Datacenters have many intended uses, depending on the intended domain of the datacenter.
-		The design of datacenters, as well as the component choices made during the design process, varies significantly depending on the intended use.
-		Some datacenter owners choose to focus on a hyperconverged infrastructure, where a many-core approach is taken to provide sufficient resources to virtualize much of the environment.
+		Such domains may include High Performance Computing (HPC), scientific computing, business-critical applications, generalized cloud infrastructure, and more.
+		The design of datacenters, as well as the component choices made during the design process, varies significantly depending on the domain it is used in.
+		Some datacenter owners within the field of HPC may choose to focus on a hyperconverged infrastructure, where a many-core approach is taken to provide massive performance density.
+		This allows for high performance, even within small metropolitan datacenters such as ones commonly found at Universities, where space comes at a premium.
+
+		In a business-critical environment, hardware may be physically replicated across both racks and physical locations, so that even a total datacenter loss would have a reduced impact on business operations.
 		In such a scenario, hardware is not chosen based on the suitability for one application, but to support the flexibility to be able to run any application in virtual machines.
-		This is especially common in industry, with the intention of reducing downtime.
+		This is especially common in this field, with the intention of further reducing downtime.
 		Virtual machines can be migrated between physical hosts while still running when hardware maintenance is required.
 		It is also possible to add resources to a virtual machine without power loss, dynamically scaling them to jobs.
 
-		Conversely, other datacenter owners may focus on High-Performance Computing (HPC).
+		Conversely, other datacenter owners may focus on scientific computing \cite{SURF2020}.
+		\todojacob{More scientific computing references}
 		These datacenters are designed differently, with a high number of nodes running a baremetal operating system.
 		The configuration of these nodes varies, depending on the intended use of the node.
 		Nodes are then categorized into performance tiers based on their intended use.
@@ -272,7 +289,7 @@ Will be written last.
 		\todojacob{Rewrite}
 		In order to store our datacenter hardware representation within \opendc{}, we define a datastructure to represent the datacenter hardware. 
 		This datastructure aims to be simple to understand, as well as easily expandable in order to represent hardware configurations that we do not focus on in this research (i.e. blade servers, or other chassis that may contain multiple/unconventional motherboards). 
-		For this reason, we choose to use JavaScript Object Notation (JSON) to store our datastructure. 
+		For this reason, we choose to use JavaScript Object Notation (JSON) \footnote{\url{https://www.json.org/json-en.html}} to store our datastructure. 
 		This supports our goals of ease of use and expandibility, as JSON is a human-readable industry-standard object storage format that can be extended to represent a variety of objects.
 		\todojacob{Reword the above line}
 
@@ -296,13 +313,13 @@ Will be written last.
 \section{Implementation of a Prototype} \label{sec:implementation}
 	In this section, we describe the prototyping stage of this project.
 	We cover the motivations behind prototyping, as well as the processes of designing, implementing and testing the prototype.
-	\subsection{Why prototype?}
+	\subsection{Why Prototype?}
 		Prototyping is an important part of our design process for implementing the new topologies in \opendc{}.
 		The design proposal requires the implementation of certain new technologies (such as MongoDB) which we are unfamiliar with.
 		As a result, prototyping provides us with a way of becoming familiar with these new technologies, as well as assessing their suitability, before we begin the process of implementing them into the existing \opendc{} codebase.
-		We also can create prototypes of the datastructure, as well as the corresponding interactions with it, and assess the suitability of the datastructure with regards to the interactions we require it to be capable of handling.
+		We also can create prototypes of the datastructure, as well as the corresponding interactions with it, and assess the suitability of the datastructure with regards to the interactions we require it to perform.
 	
-	\subsection{Creating a prototype}
+	\subsection{Creating a Prototype}
 		The two main learning outcomes of prototyping are to explore how we can best implement and interact with MongoDB, and to iteratively improve our datastructure design.
 		As a result, the prototype consists of three components: a MongoDB instance, a Python module that interfaced with the database, and a second Python application to serve as a rudimentary frontend. 
 		This configuration has been chosen to be relatively close to how \opendc{} already implements its database connections, which also uses a Python module to abstract away most database interactions.
@@ -341,25 +358,56 @@ Will be written last.
 
 \newpage
 
+\section{Domain-Specific Prefabs in \opendc{}}
+
+	\subsection{Representing Domain-Specific Hardware with Prefabs}
+
+	\subsection{Accuracy of Hardware Representation}
+	\todojacob{Change subsection title}
+		blades not useful for accurate planning of the physical datacenter, but still useful for performance testing
+
+	\subsection{analysis - how to do for other domains}
+
+	\todojacob{Can maybe add this into eval if it is not long enough}
+
+\newpage
+
 \section{Evaluation of Design \& Implementation} \label{sec:evaluation}
 
 \newpage
 
 \section{Conclusion} \label{sec:conclusion}
-
-\section{Future Work} \label{sec:future-work}
+	\subsection{Summary}
+	
+	\subsection{Future Work} \label{sec:future-work}
 	\todojacob{Adding this here for now, will likely merge future work into conclusion at a later date.}
 	Looking forward, there are several areas of interest that it would be beneficial to visit in future research.
 
-	Firstly, it would be interesting to design a means for \opendc{} to simulate user-specified workloads on systems designed by \opendc{} itself. 
+	Firstly, there are many more characteristics of datacenter hardware that we could extend \opendc{} to represent. 
+	We do not focus on high-density servers with multiple mainboards (such as blade servers) in each chassis in this thesis. 
+	We could also extend rack prefabs to include networking hardware required for the topology. 
+	The addition of networking hardware would also be beneficial for modelling Storage Area Networks (SANs) as well as topologies that include nodes comprised of multiple units, such as HP's Superdome Flex concept \footnote{\url{http://hpe.com/superdome}}.
+	Hardware for managing the power distribution throughout a topology would also be an important future expansion.
+	Uninterruptible Power Supplies (UPSes) and Power Distribution Units (PDUs) are critical to the health of datacenter hardware, and take up rackspace.
+	As a result, it would be useful to represent this hardware in \opendc{} in the future, as per-rack power limits would be dictated by the presence of such hardware.
+
+	Next, the \opendc{} user interface could be further refined, to increase functionality and improve usability.
+	A possible addition to the UI could be a powerful text-based console within the browser, so that the creation and manipulation of topologies and prefabs could become even more intuitive, allowing for even faster (and reproducible) prototyping.
+
+	Additionally, we could extend domain-specific prefabs to include more domains.
+	So far, we have covered the domain of High Performance Computing, but there are many more that remain that are extremely relevant to the direction of the industry.
+	Areas such as cloud gaming, or business-critical infrastructure have different requirements of their hardware choices, and so their topologies and thus their prefabs would likely look quite different from what we have explored so far in this thesis.
+	Future work could investigate what kinds of hardware is used in these fields, and what useful prefabs would look like in these domains.
+
+	Lastly, it would be interesting to design a means for \opendc{} to simulate user-specified workloads on systems designed by \opendc{} itself. 
 	\opendc{} would be able to leverage a large database of performance data to make component choices based on the workload specified by the user. 
 	\opendc{} could even be taught how to perform such a task, using Machine Learning with existing datacenter designs as training models.
+	Research could be carried out to determine which hardware characteristics translate best into high performance for certain workloads, leading to objectively performant prefabs designed for those workloads.
+	These research-based prefabs would then serve to validate the prefabs that \opendc{} learns to build, and further help develop this functionality.
 	In this way, the system would be designed for the best objective performance at the specified workload, potentially adherent to specified constraints such as financial or power budget.
 	If desired, the level of user interaction could be minimal to none, perhaps only requiring small changes to the design.
 
-	Secondly, there are many more characteristics of datacenter hardware that we could extend \opendc{} to represent. 
-	We do not focus on high-density servers with multiple mainboards (such as blade servers) in each chassis in this thesis. 
-	In addition, we could extend rack prefabs to include networking hardware required for the topology. 
+
 
 
 
