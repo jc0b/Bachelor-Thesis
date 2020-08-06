@@ -3,6 +3,7 @@
 \documentclass[11pt]{article}
 \usepackage{graphicx}
 \usepackage{hyperref}
+\usepackage[table,xcdraw]{xcolor}
 
       \textwidth 15cm
       \textheight 22cm
@@ -105,7 +106,7 @@ Will be written last.
 		This requires a high level of technical understanding, and relies solely on the user's knowledge of the intended workload to make component choices. 
 		In this way, the reasoning behind component choices has to be expressed by the individual, rather than \opendc{} itself.  
 
-		With the implementation of prefabricated components (\textit{prefabs}), complete collections of components intended for a specific workload can be "dragged and dropped" into a datacenter design, allowing for accelerated prototyping.
+		With the implementation of prefabricated components (\textit{prefabs}), complete collections of components intended for a specific workload can be ``dragged and dropped" into a datacenter design, allowing for accelerated prototyping.
 		In this way, hardware choices can be made by \opendc{}, based on which workload(s) the user wants to run.
 		As a result, all a user would need to know to begin designing a datacenter would be its intended purpose, and the workloads it would be required to run.
 		% A user could then "drag and drop" the components required for certain services into their datacenter design, which would provide at least a starting point to build off of, allowing for accelerated prototyping.
@@ -139,6 +140,7 @@ Will be written last.
 		\begin{enumerate}
 			\item A design for a datastructure that can be used to store datacenter hardware representations that is also easily usable and expandable, as well as an evaluation of said design in terms of the suitability of the datastructure for purpose.
 			\item An implementation of this design into the main codebase of \opendc{}, as well as an evaluation of this design comparing usability to the previous version of \opendc{}.
+			\item An example library of components intended for High Performance Computing for use within \opendc{}, built using the design specified in this thesis.
 		\end{enumerate}
 	
 	\subsection{Thesis Outline}
@@ -154,7 +156,9 @@ Will be written last.
 \newpage
 
 \section{Background} \label{sec:background}
-
+	Servers today are used for a wide variety of things, ranging from hosting video games all the way up to calculations for nuclear research at the European Organization for Nuclear Research (CERN) \cite{Andrade2012}.
+	As the need for servers grows, in part due to a massive increase in the demand for cloud services \cite{Pring2009}, the size of datacenters will also have to grow.
+	As a result, datacenter operators will have design and organise these new datacenters into a logical organisational structure.
 	\subsection{A Topological View of Datacenters}
 		\begin{figure}[ht!]
 			\centering
@@ -192,14 +196,14 @@ Will be written last.
 
 		With the advent of PaaS and particularly SaaS offerings from major cloud providers, developers can implement entire layers of their software stack with just a few clicks. 
 		These layers still run in virtual machines, but the developer does not need to concern themselves too much with building or maintain the hardware or operating system.
-		This concept is already offered by some cloud providers: DigitalOcean is a Virtual Private Server (VPS) provider that harnesses a "marketplace" of pre-configured VPS templates (known as "1-Click Apps") in order to simplify use of the platform \cite{DigitalOcean2020}. 
+		This concept is already offered by some cloud providers: DigitalOcean is a Virtual Private Server (VPS) provider that harnesses a ``marketplace" of pre-configured VPS templates (known as ``1-Click Apps") in order to simplify use of the platform \cite{DigitalOcean2020}. 
 		Customers can then easily add a pre-configured VPS to their environment, without having to worry about operating system installation, configuration, or maintenance. 
 		Templates provided through the platform are typically created by the vendors of the software used in each template, and are thus of high quality and suitability for the chosen application.
 
 		In the realm of hardware, we are also seeing modularity emerge. 
 		Hewlett Packard Enterprise (HPE) produces a scalable server design, whereby more compute (in terms of CPU, Graphics and Memory) can simply be added as necessary \cite{Bang2020}.
 		A single operating system instance runs on this hardware, which can (at the time of writing) be expanded with up to 32 sockets, each with up to 28 physical cores per socket.
-		It is thus possible to begin with a single system, and simply add "more of the same" when expanding datacenter capacity.
+		It is thus possible to begin with a single system, and simply add ``more of the same" when expanding datacenter capacity.
 
 		At a more macro level, Schneider Electric provide prefabricated, modular structures to house, power, and cool datacenters \cite{Torell2014, Torell2017}.
 		While the offering from Schneider Electric does not include recommendations for actual compute hardware, IBM offers the possibility of a completely modular datacenter \cite{IBM2014}.
@@ -207,14 +211,14 @@ Will be written last.
 		These prefab datacenters are real-life examples of how datacenter design can be modular.
 
 	
-	\subsection{Formats for Specifying Prefabs}
+	\subsection{Formats for Specifying Datacenter Topology Modules}
 		When considering a new format for representing our new datastructure, we must first identify the important qualities that a suitable format must have. 
 		A functional requirement for the format is that it must support nested objects. 
 
-		The current \opendc{} database uses 35 SQL tables, 20 of which are used to store topologies.
+		The database used in version 1.x of \opendc{} contains 35 SQL tables, 20 of which are used to store topologies.
 		As a result, adding hardware items to the database requires a complex set of queries, with deletions and modifications requiring additional queries.
 		In order to reduce the complexity associated with \opendc{}, we seek a storage format that allows us to store entire prefabs (as well as topologies) within a single object.
-		The advantage of such an approach is that the database then only has to support the adding, updating and deleting of prefabs (and other topology objects).
+		The advantage of such an approach is that the database then only has to support the adding, updating and deleting of prefabs and other topology objects.
 
 		We consider several formats for representing our datastructure.
 		\todojacob{Rewrite in progress}
@@ -229,12 +233,11 @@ Will be written last.
 		The current \opendc{} frontend is written in \verb|ReactJS|, which does not natively support parsing XML without the use of an external library.
 		As we prefer not to add additional dependencies to \opendc{}, we do not find XML to be a suitable choice as a document format.
 	
-	\subsection{Domain-Specific Prefabs}
-		Datacenters have many intended uses, depending on the intended domain of the datacenter.
-		Such domains may include High Performance Computing (HPC), scientific computing, business-critical applications, generalized cloud infrastructure, and more.
+	\subsection{Domain-Specific Modules}
+		Datacenters have many intended uses, depending on the intended domain of the datacenter, such as High Performance Computing (HPC), scientific computing, business-critical applications, generalized cloud infrastructure, etc.
 		The design of datacenters, as well as the component choices made during the design process, varies significantly depending on the domain it is used in.
 		Some datacenter owners within the field of HPC may choose to focus on a hyperconverged infrastructure, where a many-core approach is taken to provide massive performance density.
-		This allows for high performance, even within small metropolitan datacenters such as ones commonly found at Universities, where space comes at a premium.
+		This allows for high performance, even within small metropolitan datacenters such as ones commonly found at universities, where space comes at a premium.
 
 		In a business-critical environment, hardware may be physically replicated across both racks and physical locations, so that even a total datacenter loss would have a reduced impact on business operations.
 		In such a scenario, hardware is not chosen based on the suitability for one application, but to support the flexibility to be able to run any application in virtual machines.
@@ -255,6 +258,10 @@ Will be written last.
 \newpage
 
 \section{A Design for a Representation of Data Center Hardware} \label{sec:design}
+	Servers within a datacenter are typically feature rich, with certain features included to differentiate them from their competitor.
+	There are characteristics of the hardware (such as chassis colour) that have little relevance when designing a datacenter.
+	Conversely, properties of the hardware such as the power draw, or the heat output, are important with regards to the planning of the datacenter infrastructure, as there will be a performance impact if these properties are not accounted for.
+	When representing datacenter hardware in a datastructure, it is important to consider which aspects of the hardware are relevant to represent.
 	
 	\subsection{The Goal of Prefabs: Requirements Analysis}
 		When designing our new datastructure, it is important to consider the potential use-cases for key stakeholders.
@@ -270,8 +277,9 @@ Will be written last.
 		\begin{itemize}
 			\item [\textbf{FR1:}] Users should be able to use existing topology definitions as a basis for new prefabs.
 			\item [\textbf{FR2:}] Users should be able to add prefabs into existing topologies, using them as building blocks to enable faster prototyping and design.
-			\item [\textbf{FR3:}] Users should be able to determine what tasks a given prefab is suited for, by means of some kind of labelling (i.e. prefabs intended for highly parallelizable workloads).
+			\item [\textbf{FR3:}] Users should be able to determine what tasks a given prefab is suited for, by means of a labelling mechanism. Prefabs could then be labelled to indicate, for example, that they are intended for highly parallelizable workloads.
 			\item [\textbf{FR4:}] Users should be able to easily share their prefab designs with others.
+			\item [\textbf{FR5:}] \opendc{} should provide some example prefabs based on servers that are popular in the market. These prefabs would provide a building block for users to get started with.
 		\end{itemize}
 
 	\thoughts{This needs to feel a little more fluid}
@@ -286,19 +294,17 @@ Will be written last.
 		Conversely, performance metrics such as how many millions of instructions per second (MIPS) a processor can execute are of utmost importance to the simulator when extrapolating performance numbers, but are generally meaningless to stakeholders without a technology background.
 	
 	\subsection{A Definition and Design of a Datastructure for Storing Prefabs}
-		\todojacob{Rewrite}
 		In order to store our datacenter hardware representation within \opendc{}, we define a datastructure to represent the datacenter hardware. 
 		This datastructure aims to be simple to understand, as well as easily expandable in order to represent hardware configurations that we do not focus on in this research (i.e. blade servers, or other chassis that may contain multiple/unconventional motherboards). 
 		For this reason, we choose to use JavaScript Object Notation (JSON) \footnote{\url{https://www.json.org/json-en.html}} to store our datastructure. 
 		This supports our goals of ease of use and expandibility, as JSON is a human-readable industry-standard object storage format that can be extended to represent a variety of objects.
-		\todojacob{Reword the above line}
 
-		In order to further the goal of simplifying working with \opendc{}, we also transition the storage database away from SQL, towards a noSQL design.
+		In order to further the goal of simplifying working with \opendc{}, we also transition the storage database away from SQL, towards a NoSQL design.
 		We choose MongoDB as a document storage solution due to its ease of use, as well as its flexibility.
 		MongoDB supports the insertion of JavaScript Object Notation (JSON) objects.
 		JSON is an expressive, industry-standard object storage format that is widely used in web-based applications.
 		It is both human-readable, and supports nested object hierarchies.
-		As a result, it meets our functional requirements.
+		The support for nested objects is crucial to us in order to achieve some of our functional requirements, namedly \textbf{FR1} and \textbf{FR2}, as it allows for easier insertion into the object.
 
 		The author of this thesis was involved in the transition from SQL to noSQL, which involved the porting of the current database schema to MongoDB. 
 		This effort also involved porting the existing \opendc{} API from Python 2.7 to Python 3, and rewriting the API to include new endpoints for prefabs, as well as the new topology structure.
@@ -326,12 +332,10 @@ Will be written last.
 
 		MongoDB has been chosen in order to easily facilitate the storage of our JSON objects.
 		MongoDB stores documents in a JSON-like format internally, and has strong library support for inserting, modifying and exporting said documents, making it relatively straightforward to re-implement our database connection.
-	
-	\subsection{The Process of Implementing the Prototype}
-		\thoughts{Is this with regard to writing the prototype? Because then I wonder if we can merge this with the above.}
+		\todojacob{more on this}
 
 	\subsection{Validating Prototypes}
-		In order to validate our prototype, we needed to determine...
+		In order to validate our prototype, we need to determine...
 		\thoughts{KLM testing on prototype}
 
 	\subsection{Lessons Learned}
@@ -359,16 +363,55 @@ Will be written last.
 \newpage
 
 \section{Domain-Specific Prefabs in \opendc{}}
-
+	In this section, we explore the High Performance Computing domain, and validate our prefab representation by creating prefabs for some common servers used within this domain. of some of the HPC-oriented server offerings from the top 3 OEMs by market share in Q1 2020.
+	
 	\subsection{Representing Domain-Specific Hardware with Prefabs}
+		In order to select server SKUs to represent, we identified the top server OEMs by market share in Q1 of 2020 \cite{Macatee2020}. These summarised findings are presented in Table 1.
+		\begin{table}[]
+		\centering
+		\begin{tabular}{|l|ll|ll}
+		\cline{1-3}
+		Company                                             & Units Shipped                   & Market Share                     \\ \hline
+		\cellcolor[HTML]{9AFF99}Dell Technologies           & \cellcolor[HTML]{9AFF99}474,011 & \cellcolor[HTML]{9AFF99}18.4\%   \\
+		\cellcolor[HTML]{9AFF99}HPE/New H3C Group           & \cellcolor[HTML]{9AFF99}377,544 & \cellcolor[HTML]{9AFF99}14.7\%   \\
+		\cellcolor[HTML]{9AFF99}Inspur/Inspur Power Systems & \cellcolor[HTML]{9AFF99}211,007 & \cellcolor[HTML]{9AFF99}8.2\%    \\
+		Lenovo                                              & 153,570                         & 6.0\%                            \\
+		Super Micro                                         & 132,001                         & 5.1\%                            \\
+		Original Design Manufacturer Direct sales                                         & 770,446                         & 29.9\%                           \\
+		Rest of Market                                      & 456,841                         & 17.7\%                           \\ \cline{1-3}
+		\textbf{Total}                                      & \textbf{2,575,439}              & \textbf{100.0\%}                 \\ \cline{1-3}
+		\end{tabular}
+		\caption{Market Share Distribution amongst Server OEMS in Q1 of 2020}
+		\label{table:1}
+		\end{table}
+		We chose the individual manufacturers with the top 3 market shares (highlighed in green) as our target manufacturers.
+		We then chose the HPC-oriented server offerings from each of these manufacturers, and attempted to model them in the prefab datastructure.
+		The server selection process varied slightly by manufacturer, but generally, we sought out servers that the manufacturer described to be suited for HPC, or other intensive compute workloads.
+		For each server, we then attempted to represented it with as powerful of a configuration as possible, populating all sockets, DIMM slots and storage bays.
+		For HPE's Superdome Flex, we also included the optional GPUs in the configuration.
+		Other configurations supported GPUs, but as they were not included in any of the available OEM configurations, we opted not to include them in these configurations.
 
 	\subsection{Accuracy of Hardware Representation}
-	\todojacob{Change subsection title}
-		blades not useful for accurate planning of the physical datacenter, but still useful for performance testing
+		Ultimately, we find the accuracy of our hardware representations to be sufficient.
+		There are aspects of each server that are not represented in our prefabs, such as the presence of Out-of-Band management, or network cards.
+		These components currently do not form part of our topology design, as they are currently not relevant to our simulations.
 
-	\subsection{analysis - how to do for other domains}
+		Additionally, there are aspects of hardware that we have chosen not to represent in this thesis, such as multi-node chassis.
+		As a result, it was not possible to model hardware such as HPE's ``Apollo" line of high-density HPC servers, or Dell's PowerEdge Blade Enclosure.
+		Such hardware is seen frequently in the HPC domain, providing high levels of compute density, further solidifying the notion that \opendc{} should support these kinds of representations in the future.
+		However, it is still possible to simulate performance aspects of these multi-node systems, as they can be represented within \opendc{} as individidual servers.
+		As a result, this limitation only impacts physical datacenter design.
 
-	\todojacob{Can maybe add this into eval if it is not long enough}
+		Lastly, the ``Inspur Power Systems FP5180G2" prefab contains IBM POWER9 processors, based on the Power Instruction Set Architecture \cite{IBM2017}.
+		These CPUs exhibit different performance characteristics than Intel or AMD processors, in part due to different instructions exposed by the CPU.
+		This difference is not accounted for by the simulator in \opendc{}, and there is currently not a provision for representing this difference in our topology structure.
+		Again, this is an improvement that could be made in the future, and would be relatively straightforward to represent given the flexible nature of our topology structure.
+
+
+	\subsection{Applying this Approach to Other Domains}
+		We find that this approach would be straightforward to apply to other domains.
+		Most manufacturers provide information about intended workloads for their hardware offerings, allowing for relatively straightforward server selection.
+		For smaller domains (such as game streaming), however, it may be beneficial to consider the performance requirements of the domain with regards to speciality hardware, as these domains are not always as clearly differentiated.
 
 \newpage
 
@@ -384,15 +427,16 @@ Will be written last.
 	Looking forward, there are several areas of interest that it would be beneficial to visit in future research.
 
 	Firstly, there are many more characteristics of datacenter hardware that we could extend \opendc{} to represent. 
-	We do not focus on high-density servers with multiple mainboards (such as blade servers) in each chassis in this thesis. 
+	We currently do not focus on high-density servers with multiple mainboards (such as blade servers) in each chassis in this thesis. 
 	We could also extend rack prefabs to include networking hardware required for the topology. 
-	The addition of networking hardware would also be beneficial for modelling Storage Area Networks (SANs) as well as topologies that include nodes comprised of multiple units, such as HP's Superdome Flex concept \footnote{\url{http://hpe.com/superdome}}.
+	The addition of networking hardware would also be beneficial for modelling Storage Area Networks (SANs) as well as topologies that include nodes comprised of multiple units, such as HP's Superdome Flex concept\footnote{\url{http://hpe.com/superdome}}.
 	Hardware for managing the power distribution throughout a topology would also be an important future expansion.
 	Uninterruptible Power Supplies (UPSes) and Power Distribution Units (PDUs) are critical to the health of datacenter hardware, and take up rackspace.
 	As a result, it would be useful to represent this hardware in \opendc{} in the future, as per-rack power limits would be dictated by the presence of such hardware.
 
 	Next, the \opendc{} user interface could be further refined, to increase functionality and improve usability.
 	A possible addition to the UI could be a powerful text-based console within the browser, so that the creation and manipulation of topologies and prefabs could become even more intuitive, allowing for even faster (and reproducible) prototyping.
+	While the features we have introduced in this thesis are aimed towards a more general, less technically-oriented audience, the above feature would be aimed at users with more experience in datacenter design.
 
 	Additionally, we could extend domain-specific prefabs to include more domains.
 	So far, we have covered the domain of High Performance Computing, but there are many more that remain that are extremely relevant to the direction of the industry.
