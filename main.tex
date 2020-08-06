@@ -366,8 +366,7 @@ Will be written last.
 	In this section, we explore the High Performance Computing domain, and validate our prefab representation by creating prefabs for some common servers used within this domain. of some of the HPC-oriented server offerings from the top 3 OEMs by market share in Q1 2020.
 	
 	\subsection{Representing Domain-Specific Hardware with Prefabs}
-		In order to select server SKUs to represent, we identified the top server OEMs by market share in Q1 of 2020 \cite{Macatee2020}. These summarised findings are presented in Table 1.
-		\begin{table}[]
+		\begin{table}[ht!]
 		\centering
 		\begin{tabular}{|l|ll|ll}
 		\cline{1-3}
@@ -383,7 +382,10 @@ Will be written last.
 		\end{tabular}
 		\caption{Market Share Distribution amongst Server OEMS in Q1 of 2020}
 		\label{table:1}
-		\end{table}
+		\end{table}git sta
+
+		In order to select server SKUs to represent, we identified the top server OEMs by market share in Q1 of 2020 \cite{Macatee2020}. These summarised findings are presented in Table 1.
+		
 		We chose the individual manufacturers with the top 3 market shares (highlighed in green) as our target manufacturers.
 		We then chose the HPC-oriented server offerings from each of these manufacturers, and attempted to model them in the prefab datastructure.
 		The server selection process varied slightly by manufacturer, but generally, we sought out servers that the manufacturer described to be suited for HPC, or other intensive compute workloads.
