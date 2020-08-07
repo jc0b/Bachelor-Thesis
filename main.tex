@@ -138,9 +138,9 @@ Will be written last.
 		% A user could then "drag and drop" the components required for certain services into their datacenter design, which would provide at least a starting point to build off of, allowing for accelerated prototyping.
 
 		When working with scalable workloads, prefabs can also provide benefits.
-		If the workload relies on homogenous nodes, these nodes can be defined as prefabs, and added into the design as needed for capacity testing.
+		If the workload relies on homogeneous nodes, these nodes can be defined as prefabs, and added into the design as needed for capacity testing.
 		Prefabs could consist of a single server, but could also scale up to a rack full of servers, or even a room full of equipment.
-		This approach would enable users reliant on homogenous hardware configurations to save their standard configurations as prefabs, further saving time when they need to add more of the same kind of node in new designs.
+		This approach would enable users reliant on homogeneous hardware configurations to save their standard configurations as prefabs, further saving time when they need to add more of the same kind of node in new designs.
 	
 	\subsection{Research Questions}
 		In this thesis, we aim to improve the ease of use of \opendc{}, while also implementing a new, easily-expandable representation of datacenter hardware that allows for accurate technical descriptions of hardware. 
@@ -222,7 +222,7 @@ Will be written last.
 		\verb|npm| is a package manager for \verb|node.js| that seeks to make installing dependencies much easier for developers \cite{Wittern2016}.
 		For open-source projects a developer can include a file listing all of the external packages they used in their project, as well as the specific versions of each of these packages, so that another individual can easily run the authors software on their own machine.
 		\verb|npm| also enables package authors to publish their packages in an online registry, so that other developers may download and use them.
-		It follows, then, that it would be helpful to be able to describe datacenter hardware, and share these descriptions, in a similiar way. 
+		It follows, then, that it would be helpful to be able to describe datacenter hardware, and share these descriptions, in a similar way. 
 
 		With the advent of PaaS and particularly SaaS offerings from major cloud providers, developers can implement entire layers of their software stack with just a few clicks. 
 		These layers still run in virtual machines, but the developer does not need to concern themselves too much with building or maintain the hardware or operating system.
@@ -285,7 +285,7 @@ Will be written last.
 		Prefabs specific to certain domains can be represented in \opendc{}, with different performance tiers included within each domain.
 		In this way, users can easily build massive, homogenous systems by selecting the node specific to their performance target, and using it as a starting point.
 
-\newpage
+\newepage
 
 \section{A Design for a Representation of Data Center Hardware} \label{sec:design}
 	Servers within a datacenter are typically feature rich, with certain features included to differentiate them from their competitor.
@@ -327,16 +327,16 @@ Will be written last.
 		In order to store our datacenter hardware representation within \opendc{}, we define a datastructure to represent the datacenter hardware. 
 		This datastructure aims to be simple to understand, as well as easily expandable in order to represent hardware configurations that we do not focus on in this research (i.e. blade servers, or other chassis that may contain multiple/unconventional motherboards). 
 		For this reason, we choose to use JavaScript Object Notation (JSON) \footnote{\url{https://www.json.org/json-en.html}} to store our datastructure. 
-		This supports our goals of ease of use and expandibility, as JSON is a human-readable industry-standard object storage format that can be extended to represent a variety of objects.
+		This supports our goals of ease of use and expandability, as JSON is a human-readable industry-standard object storage format that can be extended to represent a variety of objects.
 
 		In order to further the goal of simplifying working with \opendc{}, we also transition the storage database away from SQL, towards a NoSQL design.
 		We choose MongoDB as a document storage solution due to its ease of use, as well as its flexibility.
 		MongoDB supports the insertion of JavaScript Object Notation (JSON) objects.
 		JSON is an expressive, industry-standard object storage format that is widely used in web-based applications.
 		It is both human-readable, and supports nested object hierarchies.
-		The support for nested objects is crucial to us in order to achieve some of our functional requirements, namedly \textbf{FR1} and \textbf{FR2}, as it allows for easier insertion into the object.
+		The support for nested objects is crucial to us in order to achieve some of our functional requirements, namely \textbf{FR1} and \textbf{FR2}, as it allows for easier insertion into the object.
 
-		The author of this thesis was involved in the transition from SQL to noSQL, which involved the porting of the current database schema to MongoDB. 
+		The author of this thesis was involved in the transition from SQL to NoSQL, which involved the porting of the current database schema to MongoDB. 
 		This effort also involved porting the existing \opendc{} API from Python 2.7 to Python 3, and rewriting the API to include new endpoints for prefabs, as well as the new topology structure.
 
 
@@ -344,7 +344,7 @@ Will be written last.
 		When determining interactions we prefabs, we must define a set of operations that meets the functional requirements defined earlier.
 		
 
-\newpage
+\enewpage
 
 \section{Implementation of a Prototype} \label{sec:implementation}
 	In this section, we describe the prototyping stage of this project.
@@ -379,7 +379,7 @@ Will be written last.
 		When this test failed, we discovered that MongoDB does not use pure JSON for exports.
 		Instead, it exports objects in BSON, the same format it uses to store objects internally within the database.
 		MongoDB simply stores files in a binary format internally, and converts them back to something human-readable when you export them. 
-		However, the human-readable format that MongoDB uses is not JSON, but is deceptively similiar: BSON uses single quotes (') where JSON uses double quotes(").
+		However, the human-readable format that MongoDB uses is not JSON, but is deceptively similar: BSON uses single quotes (') where JSON uses double quotes(").
 		As a result, we implemented a conversion from BSON to JSON within our API, so API responses are formatted in proper JSON that can be used by the frontend.
 
 		We also learnt a lot about the differences between MongoDB and SQL, which allowed us to improve how we implement this new database technology throughout \opendc{}.
@@ -536,7 +536,7 @@ Will be written last.
 			Additionally, there are aspects of hardware that we have chosen not to represent in this thesis, such as multi-node chassis.
 			As a result, it was not possible to model hardware such as HPE's ``Apollo" line of high-density HPC servers\footnote{\url{https://www.hpe.com/us/en/storage/apollo-4000.html}}, or Dell's PowerEdge Blade Enclosure\footnote{\url{https://www.dell.com/ly/business/p/poweredge-m1000e/pd}}.
 			Such hardware is seen frequently in the HPC domain, providing high levels of compute density, further solidifying the notion that \opendc{} should support these kinds of representations in the future.
-			However, it is still possible to simulate performance aspects of these multi-node systems, as they can be represented within \opendc{} as individidual servers.
+			However, it is still possible to simulate performance aspects of these multi-node systems, as they can be represented within \opendc{} as individual servers.
 			As a result, this limitation only impacts physical datacenter design.
 
 			Lastly, the ``Inspur Power Systems FP5180G2" prefab contains IBM POWER9 processors, based on the Power Instruction Set Architecture \cite{IBM2017}.
