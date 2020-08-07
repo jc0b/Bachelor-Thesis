@@ -149,9 +149,11 @@ Will be written last.
 			\item [\textbf{RQ2:}] How to further allow operations and extensions of prefabs, and the sharing of data?
 			\item [\textbf{RQ3:}] How can we test and validate the use of prefabs to define hyperconverged/HPC datacenter topologies?
 		\end{itemize}
+
+		In addition, the main software artifacts resulting from this research will be published according to Free Open Source Software standards, for inspection and reuse by the community.
 	
 	\subsection{Approach}
-		The approach begins with understanding the shortcomings of the current implementation of topologies in \opendc{}.
+		Our approach begins with understanding the shortcomings of the current implementation of topologies in \opendc{}.
 		Next, we seek to understand the components that are important to represent in the datastructure, as well as identify components we no longer need to represent.
 		From here, we examine a variety of common methods of representing data, and assess their suitability towards our desired way of representing datacenter hardware.
 		Following on from this, we present a datastructure design, as well as the decisions made during the design process, and validate it through a prototyping stage.
@@ -387,53 +389,74 @@ Will be written last.
 
 \newpage
 
-\section{Domain-Specific Prefabs in \opendc{}} \label{sec:domain-specific}
-	In this section, we explore the High Performance Computing domain, and validate our prefab representation by creating prefabs for some common servers used within this domain. of some of the HPC-oriented server offerings from the top 3 OEMs by market share in Q1 2020.
+\begin{table}[]
+\centering
+	\begin{tabular}{@{}ll@{}}
+	\toprule
+	Operator                                              & Time taken (seconds) \\ \midrule
+	K (keystroke or button press)                         & .75                  \\
+	P (point to a target on a display with a mouse)       & 1.1                  \\
+	H (homing hands on keyboard or other device)          & 0.4                  \\
+	M (mentally preparing for executing physical actions) & 1.35                 \\
+	B (mouse button press or release)                     & 0.1                 
+	\end{tabular}
+\caption{Relevant operators used in our KLM testing, and their times to complete}
+\label{tab:3}
+\end{table}
+
+\section{Evaluation of Design \& Implementation} \label{sec:evaluation}
+	In this section, we evaluate the success of both the design, and the implementation of our prefab datastructure.
+	We do this in three ways: we test the ability of prefabs to represent real-life hardware, as per \textbf{RQ1}.
+	Then, using a specific domain as an example, we define a systemic approach to creating prefabs from existing OEM offerings in this domain, as per \textbf{RQ3}.
+	Lastly, we use a popular Human Computer Interaction model to assess the success of the implmented operations on prefabs, as per \textbf{RQ2}.
+
+	\subsection{Evaluating the Design with Domain-Specific Prefabs}
+		In this section, we explore the High Performance Computing domain, and validate our prefab representation by creating prefabs for some common servers used within this domain. of some of the HPC-oriented server offerings from the top 3 OEMs by market share in Q1 2020.
 	
-	\subsection{Representing Domain-Specific Hardware with Prefabs}
-		\begin{table}[]
-		\centering
-			\begin{tabular}{@{}lll@{}}
-			\toprule
-			Company                     & Units Shipped      & Market Share     \\ \midrule
-			\rowcolor[HTML]{9AFF99} 
-			Dell Technologies           & 474,011            & 18.4\%           \\
-			\rowcolor[HTML]{9AFF99} 
-			HPE/New H3C Group           & 377,544            & 14.7\%           \\
-			\rowcolor[HTML]{9AFF99} 
-			Inspur/Inspur Power Systems & 211,007            & 8.2\%            \\
-			Lenovo                      & 153,570            & 6.0\%            \\
-			Super Micro                 & 132,001            & 5.1\%            \\
-			ODM Direct                  & 770,446            & 29.9\%           \\
-			Rest of Market              & 456,841            & 17.7\%           \\ \midrule
-			\textbf{Total}              & \textbf{2,575,439} & \textbf{100.0\%} \\ \bottomrule
-			\end{tabular}
-		\caption{Market Share Distribution amongst Server OEMs in Q1 of 2020}
-		\label{tab:1}
-		\end{table}
-		\begin{table}[]
-		\centering
-			\begin{tabular}{@{}llllll@{}}
+		\subsubsection{Representing Domain-Specific Hardware with Prefabs}
+			\begin{table}[]
+			\centering
+				\begin{tabular}{@{}lll@{}}
 				\toprule
-				Brand       & SKU        & CPUs & DIMMs & Drives & GPUs \\ \midrule
-				Dell                 & PowerEdge R440      & 2             & 16             & 10              & 0             \\
-				Dell                 & PowerEdge R640      & 2             & 24             & 10              & 0             \\
-				Dell                 & PowerEdge R740xd    & 2             & 24             & 24              & 0             \\
-				Dell                 & PowerEdge R940      & 4             & 48             & 24              & 0             \\
-				HPE                  & Superdome Flex Node & 4             & 48             & 4               & 4             \\
-				HPE                  & DL360 gen10         & 2             & 24             & 8               & 0             \\
-				HPE                  & DL380 gen10         & 2             & 24             & 24              & 0             \\
-				HPE                  & DL580 gen10         & 4             & 48             & 48              & 0             \\
-				Inspur               & NF5280M5            & 2             & 24             & 25              & 0             \\
-				Inspur Power Systems & FB5180G2            & 2             & 16             & 10              & 0             \\ \bottomrule
-			\end{tabular}
-		\caption{Overview of the HPC prefabs created for this thesis}
-		\label{tab:2}
-		\end{table}
-		\newpage
-		\begin{figure}[]
-		\centering
-			\begin{lstlisting}[language=json]
+				Company                     & Units Shipped      & Market Share     \\ \midrule
+				\rowcolor[HTML]{9AFF99} 
+				Dell Technologies           & 474,011            & 18.4\%           \\
+				\rowcolor[HTML]{9AFF99} 
+				HPE/New H3C Group           & 377,544            & 14.7\%           \\
+				\rowcolor[HTML]{9AFF99} 
+				Inspur/Inspur Power Systems & 211,007            & 8.2\%            \\
+				Lenovo                      & 153,570            & 6.0\%            \\
+				Super Micro                 & 132,001            & 5.1\%            \\
+				ODM Direct                  & 770,446            & 29.9\%           \\
+				Rest of Market              & 456,841            & 17.7\%           \\ \midrule
+				\textbf{Total}              & \textbf{2,575,439} & \textbf{100.0\%} \\ \bottomrule
+				\end{tabular}
+			\caption{Market Share Distribution amongst Server OEMs in Q1 of 2020}
+			\label{tab:1}
+			\end{table}
+			\begin{table}[]
+			\centering
+				\begin{tabular}{@{}llllll@{}}
+					\toprule
+					Brand       & SKU        & CPUs & DIMMs & Drives & GPUs \\ \midrule
+					Dell                 & PowerEdge R440      & 2             & 16             & 10              & 0             \\
+					Dell                 & PowerEdge R640      & 2             & 24             & 10              & 0             \\
+					Dell                 & PowerEdge R740xd    & 2             & 24             & 24              & 0             \\
+					Dell                 & PowerEdge R940      & 4             & 48             & 24              & 0             \\
+					HPE                  & Superdome Flex Node & 4             & 48             & 4               & 4             \\
+					HPE                  & DL360 gen10         & 2             & 24             & 8               & 0             \\
+					HPE                  & DL380 gen10         & 2             & 24             & 24              & 0             \\
+					HPE                  & DL580 gen10         & 4             & 48             & 48              & 0             \\
+					Inspur               & NF5280M5            & 2             & 24             & 25              & 0             \\
+					Inspur Power Systems & FB5180G2            & 2             & 16             & 10              & 0             \\ \bottomrule
+				\end{tabular}
+			\caption{Overview of the HPC prefabs created for this thesis}
+			\label{tab:2}
+			\end{table}
+			\newpage
+			\begin{figure}[]
+			\centering
+				\begin{lstlisting}[language=json]
 {
 	"_id" : 440,
 	"name" : "Dell R440",
@@ -477,85 +500,94 @@ Will be written last.
 			}
 		]
 	}
-}
-			\end{lstlisting}
-			\caption{An example of a prefab for a Dell PowerEdge R440}
-			\label{fig:3}
-		\end{figure}
+}			\end{lstlisting}
+				\caption{An example of a prefab for a Dell PowerEdge R440}
+				\label{fig:3}
+			\end{figure}
 
-		In order to select server SKUs to represent, we identify the top server OEMs by market share in Q1 of 2020 \cite{Macatee2020}. These summarised findings are presented in Table~\ref{tab:1}.
-		
-		We choose the individual manufacturers with the top 3 market shares (highlighted in green) as our target manufacturers.
-		We then choose the HPC-oriented server offerings from each of these manufacturers, and attempt to model them in the prefab datastructure.
-		The server selection process varies slightly by manufacturer, but generally, we seek out servers that the manufacturer describes to be suited for HPC, or other intensive compute workloads.
-		For each server, we then attempt to represent it with as powerful of a configuration as possible, populating all sockets, DIMM slots and storage bays.
-		For HPE's Superdome Flex, we also include the optional GPUs in the configuration.
-		Other configurations present support GPUs, but as they are not included in any of the available OEM configurations, we opt not to include them in these configurations.
-		Additionally, we choose not to include hardware from New H3C Group, as these servers are rebranded variants of the hardware already produced by HPE.
-		As a result, the configurable options remain exactly the same as those of their HPE counterparts.
+			In order to select server SKUs to represent, we identify the top server OEMs by market share in Q1 of 2020 \cite{Macatee2020}. These summarised findings are presented in Table~\ref{tab:1}.
+			
+			We choose the individual manufacturers with the top 3 market shares (highlighted in green) as our target manufacturers.
+			We then choose the HPC-oriented server offerings from each of these manufacturers, and attempt to model them in the prefab datastructure.
+			The server selection process varies slightly by manufacturer, but generally, we seek out servers that the manufacturer describes to be suited for HPC, or other intensive compute workloads.
+			For each server, we then attempt to represent it with as powerful of a configuration as possible, populating all sockets, DIMM slots and storage bays.
+			For HPE's Superdome Flex, we also include the optional GPUs in the configuration.
+			Other configurations present support GPUs, but as they are not included in any of the available OEM configurations, we opt not to include them in these configurations.
+			Additionally, we choose not to include hardware from New H3C Group, as these servers are rebranded variants of the hardware already produced by HPE.
+			As a result, the configurable options remain exactly the same as those of their HPE counterparts.
 
-		The variety of hardware configurations in the resulting prefabs is shown in Table~\ref{tab:2}
-
-
-	\subsection{Accuracy of Hardware Representation}
-		Ultimately, we find the accuracy of our hardware representations (a condensed example of which is given in Figure~\ref{fig:3}) to be sufficient.
-		There are aspects of each server that are not represented in our prefabs, such as the presence of Out-of-Band management, or network cards.
-		These components currently do not form part of our topology design, as they are currently not relevant to our simulations.
-
-		Additionally, there are aspects of hardware that we have chosen not to represent in this thesis, such as multi-node chassis.
-		As a result, it was not possible to model hardware such as HPE's ``Apollo" line of high-density HPC servers\footnote{\url{https://www.hpe.com/us/en/storage/apollo-4000.html}}, or Dell's PowerEdge Blade Enclosure\footnote{\url{https://www.dell.com/ly/business/p/poweredge-m1000e/pd}}.
-		Such hardware is seen frequently in the HPC domain, providing high levels of compute density, further solidifying the notion that \opendc{} should support these kinds of representations in the future.
-		However, it is still possible to simulate performance aspects of these multi-node systems, as they can be represented within \opendc{} as individidual servers.
-		As a result, this limitation only impacts physical datacenter design.
-
-		Lastly, the ``Inspur Power Systems FP5180G2" prefab contains IBM POWER9 processors, based on the Power Instruction Set Architecture \cite{IBM2017}.
-		These CPUs exhibit different performance characteristics than Intel or AMD processors, in part due to different instructions exposed by the CPU.
-		This difference is not accounted for by the simulator in \opendc{}, and there is currently not a provision for representing this difference in our topology structure.
-		Again, this is an improvement that could be made in the future, and would be relatively straightforward to represent given the flexible nature of our topology structure.
+			The variety of hardware configurations in the resulting prefabs is shown in Table~\ref{tab:2}
 
 
-	\subsection{Applying this Approach to Other Domains}
-		We find that this approach would be straightforward to apply to other domains.
-		Most manufacturers provide information about intended workloads for their hardware offerings, allowing for relatively straightforward server selection.
-		For smaller domains (such as game streaming), however, it may be beneficial to consider the performance requirements of the domain with regards to speciality hardware, as these domains are not always as clearly differentiated.
+		\subsubsection{Accuracy of Hardware Representation}
+			Ultimately, we find the accuracy of our hardware representations (a condensed example of which is given in Figure~\ref{fig:3}) to be sufficient.
+			There are aspects of each server that are not represented in our prefabs, such as the presence of Out-of-Band management, or network cards.
+			These components currently do not form part of our topology design, as they are currently not relevant to our simulations.
 
-\newpage
+			Additionally, there are aspects of hardware that we have chosen not to represent in this thesis, such as multi-node chassis.
+			As a result, it was not possible to model hardware such as HPE's ``Apollo" line of high-density HPC servers\footnote{\url{https://www.hpe.com/us/en/storage/apollo-4000.html}}, or Dell's PowerEdge Blade Enclosure\footnote{\url{https://www.dell.com/ly/business/p/poweredge-m1000e/pd}}.
+			Such hardware is seen frequently in the HPC domain, providing high levels of compute density, further solidifying the notion that \opendc{} should support these kinds of representations in the future.
+			However, it is still possible to simulate performance aspects of these multi-node systems, as they can be represented within \opendc{} as individidual servers.
+			As a result, this limitation only impacts physical datacenter design.
 
-\section{Evaluation of Design \& Implementation} \label{sec:evaluation}
+			Lastly, the ``Inspur Power Systems FP5180G2" prefab contains IBM POWER9 processors, based on the Power Instruction Set Architecture \cite{IBM2017}.
+			These CPUs exhibit different performance characteristics than Intel or AMD processors, in part due to different instructions exposed by the CPU.
+			This difference is not accounted for by the simulator in \opendc{}, and there is currently not a provision for representing this difference in our topology structure.
+			Again, this is an improvement that could be made in the future, and would be relatively straightforward to represent given the flexible nature of our topology structure.
+
+
+		\subsubsection{Applying this Approach to Other Domains}
+			We find that this approach would be straightforward to apply to other domains.
+			Most manufacturers provide information about intended workloads for their hardware offerings, allowing for relatively straightforward server selection.
+			For smaller domains (such as game streaming), however, it may be beneficial to consider the performance requirements of the domain with regards to speciality hardware, as these domains are not always as clearly differentiated.
+
+	\subsection{Evaluating the Implementation}
+		When evaluating our implementation, we must compare our additions to \opendc{} to a version of \opendc{} before our extensions were added.
+		For the purposes of our comparison, we will use the \textit{Keystroke-Level Model} (KLM) \cite{Newell1980} to test the duration of executing a specific task.
+
+
 
 \newpage
 
 \section{Conclusion} \label{sec:conclusion}
 	\subsection{Summary}
-	
+		Datacenter usage is growing fast, and will only continue to grow as more people use products that depend on cloud services.
+		The growth of markets for IoT and game and content streaming will lead to even greater demand for datacenter capacity in the near future.
+		As a result, it remains important that there are people equipped to design these new datacenters, and their expansions.
+		With the extensions made to \opendc{} in this thesis, we intend to help broaden the field of people who are equipped to create these designs, allowing this explosive growth to continue.
+
+		In this thesis, we have presented a design for a prefab datastructure, that is capable of expressing a wide variety of common datacenter hardware.
+		The datastructure presented provides a hierarchical organisational structure, in which components have a clear and logical place. 
+		easily extensible, supporting future work both in terms of the capabilities of \opendc{}, and in terms of server design.
+		In addition, we have also validated our work against existing server hardware from a specific domain, and proposed a method for doing so in other domains.
+
 	\subsection{Future Work} \label{sec:future-work}
-	\todojacob{Adding this here for now, will likely merge future work into conclusion at a later date.}
-	Looking forward, there are several areas of interest that it would be beneficial to visit in future research.
+		Looking forward, there are several areas of interest that it would be beneficial to visit in future research.
 
-	Firstly, there are many more characteristics of datacenter hardware that we could extend \opendc{} to represent. 
-	We currently do not focus on high-density servers with multiple mainboards (such as blade servers) in each chassis in this thesis. 
-	We could also extend rack prefabs to include networking hardware required for the topology. 
-	The addition of networking hardware would also be beneficial for modelling Storage Area Networks (SANs) as well as topologies that include nodes comprised of multiple units, such as HP's Superdome Flex concept\footnote{\url{http://hpe.com/superdome}}.
-	Hardware for managing the power distribution throughout a topology would also be an important future expansion.
-	Uninterruptible Power Supplies (UPSes) and Power Distribution Units (PDUs) are critical to the health of datacenter hardware, and take up rackspace.
-	As a result, it would be useful to represent this hardware in \opendc{} in the future, as per-rack power limits would be dictated by the presence of such hardware.
+		Firstly, there are many more characteristics of datacenter hardware that we could extend \opendc{} to represent. 
+		We currently do not focus on high-density servers with multiple mainboards (such as blade servers) in each chassis in this thesis. 
+		We could also extend rack prefabs to include networking hardware required for the topology. 
+		The addition of networking hardware would also be beneficial for modelling Storage Area Networks (SANs) as well as topologies that include nodes comprised of multiple units, such as HP's Superdome Flex concept\footnote{\url{http://hpe.com/superdome}}.
+		Hardware for managing the power distribution throughout a topology would also be an important future expansion.
+		Uninterruptible Power Supplies (UPSes) and Power Distribution Units (PDUs) are critical to the health of datacenter hardware, and take up rackspace.
+		As a result, it would be useful to represent this hardware in \opendc{} in the future, as per-rack power limits would be dictated by the presence of such hardware.
 
-	Next, the \opendc{} user interface could be further refined, to increase functionality and improve usability.
-	A possible addition to the UI could be a powerful text-based console within the browser, so that the creation and manipulation of topologies and prefabs could become even more intuitive, allowing for even faster (and reproducible) prototyping.
-	While the features we have introduced in this thesis are aimed towards a more general, less technically-oriented audience, the above feature would be aimed at users with more experience in datacenter design.
+		Next, the \opendc{} user interface could be further refined, to increase functionality and improve usability.
+		A possible addition to the UI could be a powerful text-based console within the browser, so that the creation and manipulation of topologies and prefabs could become even more intuitive, allowing for even faster (and reproducible) prototyping.
+		While the features we have introduced in this thesis are aimed towards a more general, less technically-oriented audience, the above feature would be aimed at users with more experience in datacenter design.
 
-	Additionally, we could extend domain-specific prefabs to include more domains.
-	So far, we have covered the domain of High Performance Computing, but there are many more that remain that are extremely relevant to the direction of the industry.
-	Areas such as cloud gaming, or business-critical infrastructure have different requirements of their hardware choices, and so their topologies and thus their prefabs would likely look quite different from what we have explored so far in this thesis.
-	Future work could investigate what kinds of hardware is used in these fields, and what useful prefabs would look like in these domains.
+		Additionally, we could extend domain-specific prefabs to include more domains.
+		So far, we have covered the domain of High Performance Computing, but there are many more that remain that are extremely relevant to the direction of the industry.
+		Areas such as cloud gaming, or business-critical infrastructure have different requirements of their hardware choices, and so their topologies and thus their prefabs would likely look quite different from what we have explored so far in this thesis.
+		Future work could investigate what kinds of hardware is used in these fields, and what useful prefabs would look like in these domains.
 
-	Lastly, it would be interesting to design a means for \opendc{} to simulate user-specified workloads on systems designed by \opendc{} itself. 
-	\opendc{} would be able to leverage a large database of performance data to make component choices based on the workload specified by the user. 
-	\opendc{} could even be taught how to perform such a task, using Machine Learning with existing datacenter designs as training models.
-	Research could be carried out to determine which hardware characteristics translate best into high performance for certain workloads, leading to objectively performant prefabs designed for those workloads.
-	These research-based prefabs would then serve to validate the prefabs that \opendc{} learns to build, and further help develop this functionality.
-	In this way, the system would be designed for the best objective performance at the specified workload, potentially adherent to specified constraints such as financial or power budget.
-	If desired, the level of user interaction could be minimal to none, perhaps only requiring small changes to the design.
+		Lastly, it would be interesting to design a means for \opendc{} to simulate user-specified workloads on systems designed by \opendc{} itself. 
+		\opendc{} would be able to leverage a large database of performance data to make component choices based on the workload specified by the user. 
+		\opendc{} could even be taught how to perform such a task, using Machine Learning with existing datacenter designs as training models.
+		Research could be carried out to determine which hardware characteristics translate best into high performance for certain workloads, leading to objectively performant prefabs designed for those workloads.
+		These research-based prefabs would then serve to validate the prefabs that \opendc{} learns to build, and further help develop this functionality.
+		In this way, the system would be designed for the best objective performance at the specified workload, potentially adherent to specified constraints such as financial or power budget.
+		If desired, the level of user interaction could be minimal to none, perhaps only requiring small changes to the design.
 
 
 
