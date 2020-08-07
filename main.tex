@@ -5,6 +5,8 @@
 \usepackage{hyperref}
 \usepackage{booktabs}
 \usepackage{listings}
+\usepackage{multirow}
+\usepackage{longtable}
 \usepackage[table,xcdraw]{xcolor}
 \colorlet{punct}{red!60!black}
 \definecolor{background}{HTML}{EEEEEE}
@@ -146,8 +148,9 @@ Will be written last.
 		\todojacob{Reword the RQs to flow a little better and be a little clearer.}
 		\begin{itemize}
 			\item [\textbf{RQ1:}] How do we design a prefab abstraction that accurately describes important technical and composable features?
-			\item [\textbf{RQ2:}] How to further allow operations and extensions of prefabs, and the sharing of data?
-			\item [\textbf{RQ3:}] How can we test and validate the use of prefabs to define hyperconverged/HPC datacenter topologies?
+			\item [\textbf{RQ2:}] How can we test and validate the use of prefabs to define hyperconverged/HPC datacenter topologies?
+			\item [\textbf{RQ3:}] How to further allow operations and extensions of prefabs, and the sharing of data?
+			
 		\end{itemize}
 
 		In addition, the main software artifacts resulting from this research will be published according to Free Open Source Software standards, for inspection and reuse by the community.
@@ -361,10 +364,6 @@ Will be written last.
 		MongoDB stores documents in a JSON-like format internally, and has strong library support for inserting, modifying and exporting said documents, making it relatively straightforward to re-implement our database connection.
 		\todojacob{more on this}
 
-	\subsection{Validating Prototypes}
-		In order to validate our prototype, we need to determine...
-		\thoughts{KLM testing on prototype}
-
 	\subsection{Lessons Learned}
 		During prototyping, we learnt many things that influenced the decisions we made during the implementation phase.
 
@@ -391,24 +390,33 @@ Will be written last.
 
 \begin{table}[]
 \centering
-	\begin{tabular}{@{}ll@{}}
+	\begin{tabular}{ll}
 	\toprule
 	Operator                                              & Time taken (seconds) \\ \midrule
 	K (keystroke or button press)                         & .75                  \\
 	P (point to a target on a display with a mouse)       & 1.1                  \\
 	H (homing hands on keyboard or other device)          & 0.4                  \\
 	M (mentally preparing for executing physical actions) & 1.35                 \\
-	B (mouse button press or release)                     & 0.1                 
+	B (mouse button press or release)                     & 0.1                  \\
+	R (system response time)							  &	   0.1                  \\
+	\bottomrule
 	\end{tabular}
 \caption{Relevant operators used in our KLM testing, and their times to complete}
 \label{tab:3}
 \end{table}
 
+\begin{figure}[]
+	\centering
+	\includegraphics[width=\textwidth]{frontendstartingpoint.png}
+	\caption[The starting position for evaluation]{The starting position for evaluation}
+	\label{fig:evalstart}
+\end{figure}
+
 \section{Evaluation of Design \& Implementation} \label{sec:evaluation}
 	In this section, we evaluate the success of both the design, and the implementation of our prefab datastructure.
 	We do this in three ways: we test the ability of prefabs to represent real-life hardware, as per \textbf{RQ1}.
-	Then, using a specific domain as an example, we define a systemic approach to creating prefabs from existing OEM offerings in this domain, as per \textbf{RQ3}.
-	Lastly, we use a popular Human Computer Interaction model to assess the success of the implmented operations on prefabs, as per \textbf{RQ2}.
+	Then, using a specific domain as an example, we define a systematic approach to creating prefabs from existing OEM offerings in this domain, as per \textbf{RQ2}.
+	Lastly, we use a popular Human Computer Interaction model to assess the success of the implmented operations on prefabs, as per \textbf{RQ3}.
 
 	\subsection{Evaluating the Design with Domain-Specific Prefabs}
 		In this section, we explore the High Performance Computing domain, and validate our prefab representation by creating prefabs for some common servers used within this domain. of some of the HPC-oriented server offerings from the top 3 OEMs by market share in Q1 2020.
@@ -416,7 +424,7 @@ Will be written last.
 		\subsubsection{Representing Domain-Specific Hardware with Prefabs}
 			\begin{table}[]
 			\centering
-				\begin{tabular}{@{}lll@{}}
+				\begin{tabular}{lll}
 				\toprule
 				Company                     & Units Shipped      & Market Share     \\ \midrule
 				\rowcolor[HTML]{9AFF99} 
@@ -436,7 +444,7 @@ Will be written last.
 			\end{table}
 			\begin{table}[]
 			\centering
-				\begin{tabular}{@{}llllll@{}}
+				\begin{tabular}{llllll}
 					\toprule
 					Brand       & SKU        & CPUs & DIMMs & Drives & GPUs \\ \midrule
 					Dell                 & PowerEdge R440      & 2             & 16             & 10              & 0             \\
@@ -506,9 +514,9 @@ Will be written last.
 			\end{figure}
 
 			In order to select server SKUs to represent, we identify the top server OEMs by market share in Q1 of 2020 \cite{Macatee2020}. These summarised findings are presented in Table~\ref{tab:1}.
-			
 			We choose the individual manufacturers with the top 3 market shares (highlighted in green) as our target manufacturers.
 			We then choose the HPC-oriented server offerings from each of these manufacturers, and attempt to model them in the prefab datastructure.
+			
 			The server selection process varies slightly by manufacturer, but generally, we seek out servers that the manufacturer describes to be suited for HPC, or other intensive compute workloads.
 			For each server, we then attempt to represent it with as powerful of a configuration as possible, populating all sockets, DIMM slots and storage bays.
 			For HPE's Superdome Flex, we also include the optional GPUs in the configuration.
@@ -516,7 +524,8 @@ Will be written last.
 			Additionally, we choose not to include hardware from New H3C Group, as these servers are rebranded variants of the hardware already produced by HPE.
 			As a result, the configurable options remain exactly the same as those of their HPE counterparts.
 
-			The variety of hardware configurations in the resulting prefabs is shown in Table~\ref{tab:2}
+			The variety of hardware configurations in the resulting prefabs is shown in Table~\ref{tab:2}.
+
 
 
 		\subsubsection{Accuracy of Hardware Representation}
@@ -542,24 +551,163 @@ Will be written last.
 			For smaller domains (such as game streaming), however, it may be beneficial to consider the performance requirements of the domain with regards to speciality hardware, as these domains are not always as clearly differentiated.
 
 	\subsection{Evaluating the Implementation}
-		When evaluating our implementation, we must compare our additions to \opendc{} to a version of \opendc{} before our extensions were added.
-		For the purposes of our comparison, we will use the \textit{Keystroke-Level Model} (KLM) \cite{Newell1980} to test the duration of executing a specific task.
+		In this section, we evaluate the performance improvements resulting from the implementation of prefabs.
+		We use the \textit{Keystroke-Level Model} (KLM) \cite{Newell1980} to test the duration of performing a given task in both versions of \opendc{}, and compare the results.
+		KLM measures the number of keystrokes (or other actions) that need to be executed to complete a given goal. 
+		Each action is assigned a time duration.
+		In order to calculate an estimate of how long a task will take, one can map out the actions required to complete the task and translate these actions directly to a time duration.
+
+		\subsubsection{Experimental Setup}
+			When evaluating our implementation, we must compare our additions to \opendc{} to a version of \opendc{} before our extensions were added.
+			For the purposes of our comparison, we will use the aforementioned KLM methodology to test the duration of executing a specific task.
+			We present the KLM operators we used in Table~\ref{tab:1}.
+
+			As part of our testing, we account for the response time of the system. 
+			While we find that, once the application is loaded locally, it reacts quite quickly (almost instantly) to user interaction.
+			However, in this scenario the application is running on a local machine, with only one user.
+			In a production environment we would expect both multiple concurrent socket connections due to multiple users, as well as increased latency between the server and the client when they are not on the same host. 
+			As a result, we use an \textit{R} value of 0.1 seconds to represent the time the system takes to update the user interface, as we feel this is more representative of how the system would behave when deployed.
+			This value will be added to our final total for each click of the mouse (\textit{B}).
+			We also make the assumption that the user has their hand on the mouse already, negating the need to include the duration required to home their hand to the mouse.
+
+			For our usability test, we compare the process of copying a rack in version 1.x of \opendc{}, and our new version of \opendc{} with prefabs.
+			We create a room, containing a single rack.
+			This rack contains 3 machines, each containing 1 CPU, 1 GPU, 1 memory DIMM, and one hard disk.
+			We then attempt to copy the contents of this rack into a new rack.
+			The KLM task begins on the screen shown in Figure~\ref{fig:evalstart}, and ends when a second rack has been created with the same contents as the initial rack.
+			
+
+		\subsubsection{Experimental Results}
+			\begin{table}[]
+			\centering
+			\resizebox*{!}{\textheight}{%
+				\begin{tabular}{llll}
+					\toprule
+					\multicolumn{2}{l}{version 1.x}                      & \multicolumn{2}{l}{version 2.x}                       \\ \midrule
+					Move to target tile                      & 1.1       & Move mouse to target rack                       & 1.1 \\
+					Click                                    & 0.1       & Click                                           & 0.1 \\
+					Move to "start rack construction" button & 1.1       & Click                                           & 0.1 \\
+					Click                                    & 0.1       & Move mouse to "save this rack to prefab" button & 1.1 \\
+					Move back to target tile                 & 1.1       & Click "save this rack to prefab"                & 0.1 \\
+					Click                                    & 0.1       & Move mouse to "back to room"                    & 1.1 \\
+					Move to "stop rack construction" button  & 1.1       & Click "back to room"                            & 0.1 \\
+					Click                                    & 0.1       & Move mouse to "load a rack from a prefab"       & 1.1 \\
+					move to newly made rack                  & 1.1       & Click "load a rack from a prefab"               & 0.1 \\
+					Click                                    & 0.1       & Move mouse to target prefab                     & 1.1 \\
+					Move mouse to "add machine" button       & 1.1       & Click                                           & 0.1 \\
+					Click                                    & 0.1       & Move mouse to "confirm import" button           & 1.1 \\
+					Move mouse to "add machine" button       & 1.1       & Click                                           & 0.1 \\
+					Click                                    & 0.1       & Move mouse to desired rack location             & 1.1 \\
+					Move mouse to "add machine" button       & 1.1       & Click                                           & 0.1 \\
+					Click                                    & 0.1       &                                                 &     \\
+					Move mouse to machine one                & 1.1       &                                                 &     \\
+					Click                                    & 0.1       &                                                 &     \\
+					move mouse to "add" button               & 1.1       &                                                 &     \\
+					Click                                    & 0.1       &                                                 &     \\
+					Move mouse to "GPU" tab                  & 1.1       &                                                 &     \\
+					Click                                    & 0.1       &                                                 &     \\
+					move mouse to "add" button               & 1.1       &                                                 &     \\
+					Click                                    & 0.1       &                                                 &     \\
+					Move mouse to "memory" tab               & 1.1       &                                                 &     \\
+					Click                                    & 0.1       &                                                 &     \\
+					move mouse to "add" button               & 1.1       &                                                 &     \\
+					Click                                    & 0.1       &                                                 &     \\
+					Move mouse to "storage" tab              & 1.1       &                                                 &     \\
+					Click                                    & 0.1       &                                                 &     \\
+					move mouse to "add" button               & 1.1       &                                                 &     \\
+					Click                                    & 0.1       &                                                 &     \\
+					Move mouse to "back to rack" button      & 1.1       &                                                 &     \\
+					Click                                    & 0.1       &                                                 &     \\
+					Move mouse to machine two                & 1.1       &                                                 &     \\
+					Click                                    & 0.1       &                                                 &     \\
+					move mouse to "add" button               & 1.1       &                                                 &     \\
+					Click                                    & 0.1       &                                                 &     \\
+					Move mouse to "GPU" tab                  & 1.1       &                                                 &     \\
+					Click                                    & 0.1       &                                                 &     \\
+					move mouse to "add" button               & 1.1       &                                                 &     \\
+					Click                                    & 0.1       &                                                 &     \\
+					Move mouse to "Memory" tab               & 1.1       &                                                 &     \\
+					Click                                    & 0.1       &                                                 &     \\
+					move mouse to "add" button               & 1.1       &                                                 &     \\
+					Click                                    & 0.1       &                                                 &     \\
+					Move mouse to "Storage" tab              & 1.1       &                                                 &     \\
+					Click                                    & 0.1       &                                                 &     \\
+					move mouse to "add" button               & 1.1       &                                                 &     \\
+					Click                                    & 0.1       &                                                 &     \\
+					Move mouse to "back to rack" button      & 1.1       &                                                 &     \\
+					Click                                    & 0.1       &                                                 &     \\
+					Move mouse to machine three              & 1.1       &                                                 &     \\
+					Click                                    & 0.1       &                                                 &     \\
+					move mouse to "add" button               & 1.1       &                                                 &     \\
+					Click                                    & 0.1       &                                                 &     \\
+					Move mouse to "GPU" tab                  & 1.1       &                                                 &     \\
+					Click                                    & 0.1       &                                                 &     \\
+					move mouse to "add" button               & 1.1       &                                                 &     \\
+					Click                                    & 0.1       &                                                 &     \\
+					Move mouse to "memory" tab               & 1.1       &                                                 &     \\
+					Click                                    & 0.1       &                                                 &     \\
+					move mouse to "add" button               & 1.1       &                                                 &     \\
+					Click                                    & 0.1       &                                                 &     \\
+					Move mouse to "storage" tab              & 1.1       &                                                 &     \\
+					Click                                    & 0.1       &                                                 &     \\
+					move mouse to "add" button               & 1.1       &                                                 &     \\
+					Click                                    & 0.1       &                                                 &     \\
+					Move mouse to "back to rack" button      & 1.1       &                                                 &     \\
+					Click                                    & 0.1       &                                                 &     \\ \midrule
+					\textbf{M + 35P + 35B + 35R}             &           & \textbf{M + 7P + 8B + 8R}                       &     \\
+					\textbf{= 1.35 + 38.5 + 3.5 + 3.5}       & \textbf{} & \textbf{= 1.35 + 7.7 + 0.8 + 0.8}               &     \\
+					\textbf{= 46.85}                         & \textbf{} & \textbf{= 10.65}                                &     \\ \bottomrule
+				\end{tabular}%
+				}
+				\caption{Results of KLM testing before and after the addition of prefabs}
+				\label{tab:results}
+			\end{table}
+
+			From the results in Table~\ref{tab:results}, we can draw two conclusions.
+
+			The first of these is that the number of interactions with the system is significantly reduced with the addition of prefabs.
+			In the left-hand column, it can be seen that the process of copying the rack takes 70 discrete interactions, with each machine taking 18 interactions to copy.
+			With less machines in the rack, version 1.x requires less interactions to perform the copy, but at the same time will take exponentially more time to copy as more machines are added.
+			At the same time, version 2.x requires the same number of interactions regardless of the number of machines in the rack.
+
+			As a result of the reduced number of interactions required, we can also conclude that the time taken to copy a rack is reduced by the addition of prefabs.
+			In the specific example above, the addition of prefabs allows for the copying of the rack in less than 25\% of the time that it would take to complete the copy without prefabs.
+
+
+
+
+
+
 
 
 
 \newpage
 
 \section{Conclusion} \label{sec:conclusion}
+	In this section, we assess the suitability of our solution as a response to the problem presented in Chapter~\ref{sec:introduction}.
+	We also discuss the future of this work, exploring ways in which this work could be further developed and improved, and how these ideas align with the vision for \opendc{} \cite{Iosup2017}.
+
 	\subsection{Summary}
 		Datacenter usage is growing fast, and will only continue to grow as more people use products that depend on cloud services.
 		The growth of markets for IoT and game and content streaming will lead to even greater demand for datacenter capacity in the near future.
 		As a result, it remains important that there are people equipped to design these new datacenters, and their expansions.
 		With the extensions made to \opendc{} in this thesis, we intend to help broaden the field of people who are equipped to create these designs, allowing this explosive growth to continue.
 
-		In this thesis, we have presented a design for a prefab datastructure, that is capable of expressing a wide variety of common datacenter hardware.
-		The datastructure presented provides a hierarchical organisational structure, in which components have a clear and logical place. 
-		easily extensible, supporting future work both in terms of the capabilities of \opendc{}, and in terms of server design.
-		In addition, we have also validated our work against existing server hardware from a specific domain, and proposed a method for doing so in other domains.
+		In this thesis, we have presented a design for a prefab datastructure that is capable of expressing a wide variety of common datacenter hardware.
+		Through creating a library of HPC prefabs, we have shown that this datastructure is capable of accurately representing common datacenter hardware.
+		Because of its use of JSON, the datastructure is also easily extensible, supporting future work both in terms of the capabilities of \opendc{}, and in terms of server design.
+		The JSON basis also provides a hierarchical organisational structure, in which components have a clear and logical place, allowing the structure itself to be easily readable and understandable.
+		
+		In addition to validating our work against existing server hardware from a specific domain, we have proposed a method for doing so that is applicable to other domains.
+		Using information provided by server OEMs to define our domain-specific prefabs is suitable for at least the larger domains within datacenter usage, if not also for smaller and emerging domains such as game streaming.
+		However, we are limited in this approach to the domains that a given OEM chooses to target: smaller and emerging domains may not be considered large enough economically for an OEM to design for, leading to a reduced set of existing servers to model.
+		However, we do find that our approach has been successful for the domain of HPC, producing high-quality representations of existing server SKUs currently offered on the market.
+
+		Lastly, we have shown that operations on prefabs can provide a significant increase in prototyping speed.
+		These improvements increase as the complexity of the datacenter increases, leading to even larger performance improvements for users tasked with designing massive-scale topologies.
+		Now that the prefab datastructure has been implemented in \opendc{}, along with an implementation of a desirable operation on prefabs, other operations can be easily added to the project to further increase usability and prototyping speed.
+		We expect that, with user interface refinements, it may even be possible to further decrease the time taken to design a topology.
+
 
 	\subsection{Future Work} \label{sec:future-work}
 		Looking forward, there are several areas of interest that it would be beneficial to visit in future research.
