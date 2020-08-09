@@ -153,38 +153,64 @@ Will be written last.
 		In this way, hardware choices can be made by \opendc{}, based on which workload(s) the user wants to run.
 		As a result, all a user would need to know to begin designing a datacenter would be its intended purpose, the workloads it would be required to run, and some basic compositional rules for prefabs when trying to assemble more complex or advanced configurations.
 
-		When working with scalable workloads, prefabs can provide further benefits.
-		If the workload relies on homogeneous nodes, these nodes can be defined as prefabs, and added repeatedly into the design as needed for capacity testing.
+		We also envision that users could export the topologies that they design as prefabs, allowing for easy replicability of existing designs.
+		The ability to save their designs as prefabs could support the sharing of prefabs within the community, allowing others to benefit from the sharing of knowledge regarding workload requirements.
+		Overall, we hope that the addition of such functionality would result in a collection of prefabs that covers a wide variety of workloads, across an even wider variety of hardware configurations.
+
+		Additionally, prefabs could provide further benefits when working with scalable workloads.
+		If the workload relies on homogeneous nodes, these nodes could be defined as prefabs, and added repeatedly into the design as needed for capacity testing.
 		Prefabs could consist of a single server, but could also scale up to a rack full of servers, or even a room full of equipment.
 		This approach would enable users reliant on homogeneous hardware configurations to save their standard configurations as prefabs, further saving time when they need to add more of the same kind of node in new designs.
 	
 	\subsection{Research Questions and Approach}
 		In this thesis, we aim to improve the ease of use of \opendc{}, while also implementing a new, easily-expandable representation of datacenter hardware that allows for accurate technical descriptions of hardware. 
 		In doing so, we answer the following three questions:
-		\todojacob{Reword the RQs to flow a little better and be a little clearer.}
 		\begin{itemize}
 			%TODO: flesh this section out a lot more, better merge it with what used to be Approach
 			% - split approach per RQ
 			\item [\textbf{RQ1:}] How to design a prefab abstraction that accurately describes important technical and composable features of datacenter hardware?
+
+			It is important for our vision of prefabs to be able to store them in some way.
+			In order to support this goal, we need to create a data structure that can contain an accurate hardware representation, along with its relevant metadata (such as tags, author, creation date etc).
+
+			While smaller topologies may be expressed quite easily, we must consider that our solution should also scale to massive and complex topologies, while still preserving the same level of detail.
+			It must also support a variety of operations to add, remove and modify data stored within it to facilitate user working with it.
+			This data structure should also be relatively straight-forward to understand and easily extensible, allowing it to be further expanded by open source contributors.
+
+			Our approach begins in Section~\ref{sec:design}, with understanding the shortcomings of the current implementation of topologies in \opendc{}.
+			Next, we seek to understand the components that are important to represent in the data structure, and identify components we no longer need to represent.
+			From here, we examine a variety of common methods of representing data, and assess their suitability towards our desired way of representing datacenter hardware.
+			Following on from this, we present a data structure design, and the decisions made during the design process, validating our design by using it to represent servers currently offered by popular OEMs in Section~\ref{sec:evaluation}.
+			We also assess what interactions need to be supported on the data structure, and ensure that the data structure design supports these interactions.
+
 			% design section
 			\item [\textbf{RQ2:}] How to implement a prototype of the prefab abstraction?
 			% prototyping section
+			Prototyping the prefab abstraction is important for the addition of prefabs, as we may use new technologies that need to be tested and evaluated for compatibility with the current \opendc{} software stack.
+			We can use prototyping to become more familiar with these new technologies, analysing their strenghts and potential shortcomings.
+			We also may use prototyping to determine what is and isn't useful in our initial data structure design, and iteratively improve our design with these findings.
+
+			\opendc{} is quite a large and complex project, with a lot of moving parts.
+			In the process of adding a new data structure throughout \opendc{}, it is important to continually test the code we are adding to the codebase for functionality.
+			As a result, we must ensure that our prototype is representative of the structure of the current \opendc{} project.
+			Then, we can add the functions and data structure to our prototype, and evaluate whether the interactions we have designed are suitable for further integration into the \opendc{} codebase.
+			We can also use the prototype to determine if any additional changes need to be made to the existing codebase to support our extensions, and whether any of these modifications may adversely impact functionality.
+
+			In Section~\ref{sec:prototype}, we detail the process of designing and creating a prototype.
+			We also provide a summary of the lessons learned during prototyping, and describe how we can use what we have learned to further improve our implementation of prefabs into \opendc{}.
 			% - mimicking the opendc project structure to create a basis, then defining methods of creating, modifying, fetching prefabs
 			\item [\textbf{RQ3:}] How to assess the use of prefabs in practice?
 			% KLM testing
+			In addition to implementing prefabs, we also should show that they are important to the \opendc{} project, and to our goal of improving the usability of \opendc{}.
+			To do this, we should assess the impact that the addition of prefabs have on performing certain tasks in \opendc{}, and determine what the benefits of prefabs are in concrete terms.
 
+			In order to do so, we must devise a testing strategy to show the improvements that our prefab implementation brings.
+			We must also decide which metrics are important to measure when showing these improvements, and how we can measure these quantities.
+
+			In Section~\ref{sec:evaluation}, we detail our experimental setup for subjectively testing the improvement that prefabs bring to \opendc{}.
+			We also describe and discuss our experimental results, providing a short conclusion of what these results mean for the future of prefabs in \opendc{}.
 			
 		\end{itemize}
-
-		In addition, the main software artifacts resulting from this research will be published according to Free Open Source Software standards, for inspection and reuse by the community.
-	
-		Our approach begins with understanding the shortcomings of the current implementation of topologies in \opendc{}.
-		Next, we seek to understand the components that are important to represent in the data structure, and identify components we no longer need to represent.
-		From here, we examine a variety of common methods of representing data, and assess their suitability towards our desired way of representing datacenter hardware.
-		Following on from this, we present a data structure design, and the decisions made during the design process, and validate it through a prototyping stage.
-		We also assess what interactions need to be supported on the data structure, and ensure that the data structure design supports these interactions.
-		We then implement the data structure design and accompanying technologies into \opendc{}.
-		Lastly, we create some prefabs representing common HPC servers to evaluate our prefab design and assess whether it is descriptive enough to represent a variety of real-world servers.
 	
 	\subsection{Main Contribution of the Work}
 		This thesis pioneers a new approach to representing datacenter hardware within a datacenter simulator.
@@ -199,9 +225,9 @@ Will be written last.
 	\subsection{Thesis Outline}
 		The first chapter provides a short introduction to the current state of datacenter design, and the current state of OpenDC. 
 		Chapter~\ref{sec:background} provides more background on how modularity is currently used in computing, both in datacenters and in fields such as software engineering. 
-		In Chapters~\ref{sec:design} and~\ref{sec:implementation}, we design a prefab data structure, reason about the choices that have been made during the design process, and touch on the process of implementing our chosen data structure into the \opendc{} codebase.
-		In Chapter~\ref{sec:domain-specific}, we develop prefabs based on hardware common in a specific domain, and analyse whether our data structure is sufficient to represent this hardware.
+		In Chapters~\ref{sec:design} and~\ref{sec:prototype}, we design a prefab data structure, reason about the choices that have been made during the design process, and touch on the process of implementing our chosen data structure into the \opendc{} codebase.
 		Chapter~\ref{sec:evaluation} provides an assessment of the suitability of the data structure and technologies we chose, now that they have been implemented in \opendc{}.
+		We assess both the implemented data structure, as well as the implemented methods of interacting with the data structure, using a different testing methodology for each.
 		Finally, we discuss both the conclusion and future of this endeavour in Chapter~\ref{sec:conclusion}.
 	
 
@@ -210,7 +236,7 @@ Will be written last.
 \newpage
 
 \section{Background} \label{sec:background}
-	Servers today are used for a wide variety of things, ranging from hosting video games all the way up to calculations for nuclear research at the European Organization for Nuclear Research (CERN) \cite{Andrade2012}.
+	Servers today are used for a wide variety of tasks, ranging from hosting video games all the way up to calculations for nuclear research at the European Organization for Nuclear Research (CERN) \cite{Andrade2012}.
 	As the need for servers grows, in part due to a massive increase in the demand for cloud services \cite{Pring2009}, the size of datacenters will also have to grow.
 	As a result, datacenter operators will have design and organise these new datacenters into a logical organisational structure.
 	\subsection{Viewing Datacenters as Topologies}
@@ -265,6 +291,7 @@ Will be written last.
 
 	
 	\subsection{Formats for Specifying Datacenter Topology Modules}
+		\thoughts{I am honestly considering cutting this and putting some of it somewhere else (in the design, perhaps). What do you think?}
 		When considering a new format for representing our new data structure, we must first identify the important qualities that a suitable format must have. 
 		A functional requirement for the format is that it must support nested objects. 
 
@@ -274,7 +301,7 @@ Will be written last.
 		The advantage of such an approach is that the database then only has to support the adding, updating and deleting of prefabs and other topology objects.
 
 		We consider several formats for representing our data structure.
-		\todojacob{Rewrite in progress}
+
 		First, we consider \textit{YAML Ain't Markup Language} (YAML) \footnote{\url{https://yaml.org/spec/1.2/spec.html}} as our document format.
 		YAML is both human and machine readable, and supports nested object hierarchies.
 		However, we argue that YAML is not suitably human-readable.
@@ -299,8 +326,9 @@ Will be written last.
 		It is also possible to add resources to a virtual machine without power loss, dynamically scaling them to jobs.
 
 		Conversely, other datacenter owners may focus on scientific computing \cite{SURF2020}.
-		\todojacob{More scientific computing references}
-		These datacenters are designed differently, with a high number of nodes running a baremetal operating system.
+		The requirements for such systems are different.
+		They must support a high number of users, each with workloads that require as high a performance as possible.
+		As a result, these datacenters are designed differently, with a high number of nodes running a baremetal operating system.
 		The configuration of these nodes varies, depending on the intended use of the node.
 		Nodes are then categorized into performance tiers based on their intended use.
 		Performance tiers are then chosen by customers depending on the kind of workload they want to run - for example, GPUs may be installed in the nodes in tiers intended for Machine Learning workloads.
@@ -310,7 +338,7 @@ Will be written last.
 
 \newpage
 
-\section{Design for a Representation of Data Center Hardware} \label{sec:design}
+\section{Designing Representation of Data Center Hardware} \label{sec:design}
 	Servers within a datacenter are typically feature rich, with certain features included to differentiate them from their competitor.
 	There are characteristics of the hardware (such as chassis colour) that have little relevance when designing a datacenter.
 	Conversely, properties of the hardware such as the power draw, or the heat output, are important with regards to the planning of the datacenter infrastructure, as there will be a performance impact if these properties are not accounted for.
@@ -322,7 +350,7 @@ Will be written last.
 
 		Both researchers and students would benefit from the addition of prefabs to \opendc{} in the same way that developers (and other customers) benefit from modern PaaS offerings, only having to focus on which services they want to run in their datacenter.
 		Additionally, datacenter operators using \opendc{} for datacenter design and testing may also see a benefit from prefabs. 
-		Cloud service providers who provide IaaS services typically use homogenous hardware configurations, with different configurations for each performance tier. 
+		Cloud service providers who provide \textit{Infrastructure as a Service} (IaaS) services typically use homogenous hardware configurations, with different configurations for each performance tier. 
 		With prefabs, it would be straightforward to create a prefab that is representative of a given performance tier, and then clone it when performing capacity planning during periods of growth.
 		Lastly, given the widespread support for the sharing of information within academia, the ability to share prefabs would be an important addition to the features of \opendc{}.
 
@@ -335,16 +363,41 @@ Will be written last.
 			\item [\textbf{FR5:}] \opendc{} should provide some example prefabs based on servers that are popular in the market. These prefabs would provide a building block for users to get started with.
 		\end{itemize}
 
-	\thoughts{This needs to feel a little more fluid}
-
 	\subsection{Model for Datacenter Representation}
 		In this research, we provide a model for representing datacenter hardware. 
 		This model is not the first of its kind: Andreadis et al created a model for datacenter hardware to model scheduling in \opendc{} \cite{Andreadis2018}. 
-		Our model, however, offers more detail, storing more characteristics of the hardware within.
+		Our model, however, offers more detail, storing a wider range of the characteristics of the hardware components within.
 		When designing the model, it is important to consider that a large part of its purpose is to increase usability of \opendc{}. 
 		As a result, we choose to represent lots of hardware characteristics that are not used by the simulator, but provide useful information to the user. 
 		Brands of hardware are not necessary to simulate workloads, but they are useful when a user is making design decisions, or presenting their design to a wider audience.
 		Conversely, performance metrics such as how many millions of instructions per second (MIPS) a processor can execute are of utmost importance to the simulator when extrapolating performance numbers, but are generally meaningless to stakeholders without a technology background.
+
+		\subsubsection{Central Processing Unit(s)}
+			A Central Processing Unit (CPU) in our model has four main characteristics: its name, its base clock speed in megahertz, the number of physical cores, and its energy consumption in Watts.
+			With the exception of the name, all of these properties are important when performing a simulation of the performance of the CPU.
+			A server is not limited in the number of CPUs it may contain.
+			While commercially available servers, such as Lenovo's ThinkSystem SR950 \footnotetext{\url{https://lenovopress.com/lp0647-thinksystem-sr950-server-xeon-sp-gen-1}}, may contain up to 8 CPUs in a single chassis, we choose not to place an artificial limit on the CPU count.
+			In this way, the design of the data structure remains extensible, for both future hardware, and for entirely theoretical simulations.
+			Additionally, this provides the flexibility required to represent multi-chassis servers, such as HPE's Superdome Flex, that scale up to 32 sockets while functioning as one physical server to the operating system (and thus the workload).
+
+		\subsubsection{Random Access Memory}
+			In our model, Random Access Memory (RAM) has four primary characteristics.
+			It has a human-readable name, a measure of its energy consumption in Watts, its capacity in megabytes, and its bandwidth in megabytes per second.
+			The bandwidth of the memory is the product of its clock frequency, the number of data transfers per clock, the bus width of the memory, and the number of interfaces (modules) within the system.
+			At the time of writing, server memory conventionally uses Double Data Rate (DDR), with a 64-bit bus width.
+			We use 1 as the number of interfaces, in order to calculate the speed per module.
+			The combined memory bandwidth of a system increases linearly as we add modules.
+			We choose again not to limit the number of memory modules that can be added to a system.
+			While our findings suggest that Lenovo's aforementioned ThinkSystem SR950 has the most memory modules of any single-node system, with 96 in total, we don't want to artificially constrain researchers and datacenter operators from experimenting with theoretical systems with much higher memory density.
+
+		\subsubsection{Graphics Processing Unit(s)}
+			When representing Graphics Processing Units (GPUs), we choose to represent what we believe to be the most important properties of a GPU.
+			These are its name, the number of GPU cores it contains, the clock speed of the GPU cores, and the power consumption.
+			For the purposes of supporting theoretical hardware definitions, there is no limit on the number of GPUs that can be added to a topology. 
+			This choice additionally supports the simulation of systems that use an external chassis to house GPUs, using PCI Express to connect to the main compute chassis, such as the One Stop Systems 3U Compute Accelerator\footnotetext{\url{https://www.onestopsystems.com/3u-compute-accelerator-nvidia-tesla-gpus}}, which supports up to 16 GPUs per external chassis. 
+
+		\subsubsection{Storage}
+			\todojacob{This is in progress}
 	
 	\subsection{Definition and Design of a Data Structure for Storing Prefabs}
 		In order to store our datacenter hardware representation within \opendc{}, we define a data structure to represent the datacenter hardware. 
@@ -365,15 +418,35 @@ Will be written last.
 
 	\subsection{Designing Ways to Create and Interact with Prefabs}
 		When determining interactions with prefabs, we must define a set of operations that meets the functional requirements defined earlier.
-		From \textbf{FR1}, we can make the case for functionality that would allow a prefab to be created from an existing topology.
 		
+		From \textbf{FR1}, we can make the case for functionality that would allow a prefab to be created from an existing topology.
+		Such functionality should create a copy of the current topology, and store it as a prefab, allowing the user to determine the visibility (private or public) and name of the prefab.
+
+		Such functionality serves as the basis for the behaviour highlighted in \textbf{FR2}, where users would be able to then create new topologies from prefabs, or add prefabs into their existing topologies.
+		Users would be able to choose from their own private prefabs, and from all public prefabs, when adding prefabs into their design.
+
+		Users would also be able to find prefabs based on their intended use, amongst other labels. 
+		Such behaviour would be made possible by means of a labelling mechanism, satisfying \textbf{FR3}.
+		This labelling mechanism would take the form of an additional field on the prefab object, storing an array of tags assigned to the prefab.
+		These tags would indicate the suitability of the prefab to a specific task, but could also be used to indicate the scale at which it can execute such a task.
+		Such labellings are already used to convey the size of IaaS instances offered by cloud providers \cite{davatz2017}, and could also be used by \opendc{} to convey the size of workload a prefab is designed to execute.
+
+		The aforementioned labelling mechanism, combined with the ability to mark a prefab as public or private, would be crucial to enable the sharing of prefabs between users mentioned in \textbf{FR2}.
+		Such a sharing mechanism should allow users to search for prefabs, or filter them based on common tags.
+		This would enable users to find prefabs created for specific tasks, and easily share prefabs for new tasks with the community, as highlighted in \textbf{FR4}.
+
+		Lastly, the inclusion of some \opendc{} prefabs detailed in \textbf{FR5} is important to provide a basis for new prefabs.
+		Such a provision would also provide a reference for how prefabs can look to new users.
+		It would also provide the means to immediately get started with creating topologies from prefabs, instead of waiting for the community to begin providing their own.
+		Additionally, the inclusion of some basic prefabs in \opendc{} would allow users to benefit from prefabs even if they are self-hosting \opendc{}, without the community contributions.
+
 	\subsection{Summary}
 
 		
 
 \newpage
 
-\section{Implementation of a Prototype} \label{sec:implementation}
+\section{Implementation of a Prototype} \label{sec:prototype}
 	In this section, we describe the prototyping stage of this project.
 	We cover the motivations behind prototyping, and the processes of designing, implementing and testing the prototype.
 	\subsection{Why Prototype?}
@@ -430,7 +503,9 @@ Will be written last.
 	\end{tabular}
 \caption{Relevant operators used in our KLM testing, and their times to complete.}
 \label{tab:3}
+\thoughts{I am considering removing operators we do not use from this table, but i feel it undermines the mention of KLM a little: i would rather give a better understanding of KLM operators than have a slightly smaller table}
 \end{table}
+
 
 \begin{figure}[]
 	\centering
@@ -441,9 +516,8 @@ Will be written last.
 
 \section{Evaluation of Design \& Implementation} \label{sec:evaluation}
 	In this section, we evaluate the success of both the design, and the implementation of our prefab data structure.
-	We do this in three ways: we test the ability of prefabs to represent real-life hardware, as per \textbf{RQ1}.
-	Then, using a specific domain as an example, we define a systematic approach to creating prefabs from existing OEM offerings in this domain, as per \textbf{RQ2}.
-	Lastly, we use a popular Human Computer Interaction model to assess the success of the implmented operations on prefabs, as per \textbf{RQ3}.
+	We do this in two ways: first, we test the ability of prefabs to represent real-life hardware, as per \textbf{RQ1}.
+	Secondly, we use a popular Human Computer Interaction model to assess the success of the implmented operations on prefabs, as per \textbf{RQ3}.
 
 	\subsection{Evaluating the Design with Domain-Specific Prefabs}
 		In this section, we explore the High Performance Computing domain, and validate our prefab representation by creating prefabs for some common servers used within this domain. of some of the HPC-oriented server offerings from the top 3 OEMs by market share in Q1 2020.
@@ -541,7 +615,7 @@ Will be written last.
 			\end{figure}
 
 			In order to select server SKUs to represent, we identify the top server OEMs by market share in Q1 of 2020 \cite{Macatee2020}. These summarised findings are presented in Table~\ref{tab:1}.
-			We choose the individual manufacturers with the top 3 market shares (highlighted in green) as our target manufacturers.
+			We choose the three individual manufacturers with the largest market shares (highlighted in green) as our target manufacturers.
 			We then choose the HPC-oriented server offerings from each of these manufacturers, and attempt to model them in the prefab data structure.
 			
 			The server selection process varies slightly by manufacturer, but generally, we seek out servers that the manufacturer describes to be suited for HPC, or other intensive compute workloads.
@@ -605,7 +679,24 @@ Will be written last.
 			
 
 		\subsubsection{Experimental Results}
-			
+			\begin{figure}[]
+				\centering
+				\includegraphics[width=\textwidth]{results/opendc1.png}
+				\caption[Graph showing interactions required to complete a KLM task in \opendc{} without our extensions]{Graph showing interactions required to complete a KLM task in \opendc{} without prefabs.}
+				\label{fig:opendcklm1}
+			\end{figure}
+			\begin{figure}[]
+				\centering
+				\includegraphics[width=\textwidth]{results/opendc2.png}
+				\caption[Graph showing interactions required to complete a KLM task in \opendc{} with our extensions]{Graph showing interactions required to complete a KLM task in \opendc{} with prefabs.}
+				\label{fig:opendcklm2}
+			\end{figure}
+			\begin{figure}[]
+				\centering
+				\includegraphics[width=0.5\textwidth]{results/klmbarcharts.png}
+				\caption[Graph comparing time to complete a KLM task in two variants of \opendc{}]{Graph comparing time to complete a KLM task without and with prefabs.}
+				\label{fig:opendcbarchart}
+			\end{figure}
 
 			From the results in Table~\ref{tab:results}, we can draw two conclusions.
 
