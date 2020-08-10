@@ -316,7 +316,7 @@ This result allows, not only for a faster means of iteratively improving datacen
 		In a business-critical environment, hardware may be physically replicated across both racks and physical locations, so that even a total datacenter loss would have a reduced impact on business operations.
 		In such a scenario, hardware is not chosen based on the suitability for one application, but to support the flexibility to be able to run any application in virtual machines.
 		This is especially common in this field, with the intention of further reducing downtime.
-		Virtual machines can be migrated between physical hosts while still running when hardware maintenance is required.
+		Virtual machines can be migrated between physical hosts while still running when hardware maintenance is required\cite{Elsaid2016}.
 		It is also possible to add resources to a virtual machine without power loss, dynamically scaling them to jobs.
 
 		Conversely, other datacenter owners may focus on scientific computing \cite{SURF2020}.
@@ -471,7 +471,7 @@ This result allows, not only for a faster means of iteratively improving datacen
 	We cover the motivations behind prototyping, and the processes of designing, implementing and testing the prototype.
 	\subsection{Why Prototype?}
 		Prototyping is an important part of our design process for implementing the new topologies in \opendc{}.
-		In order to further the goal of simplifying working with \opendc{}, we have chosen to transition the storage database away from SQL, towards a NoSQL design.\footnote{The author of this thesis was involved in the transition from SQL to NoSQL, involving the implementation of the new databse, and the porting of the current database schema to MongoDB. 
+		In order to further the goal of simplifying working with \opendc{}, we have chosen to transition the storage database away from SQL, towards a NoSQL design.\footnote{The author of this thesis was involved in the transition from SQL to NoSQL, involving the implementation of the new database, and the porting of the current database schema to MongoDB. 
 		This effort also involved porting the existing \opendc{} API from Python 2.7 to Python 3, and rewriting the API to include new endpoints for prefabs, and the new topology structure.}
 		MongoDB has been chosen by the \opendc{} team as a NoSQL document storage solution due to its ease of use, and its flexibility.
 		MongoDB additionally natively supports the insertion of JavaScript Object Notation (JSON) objects, which we use as the storage format for our data structure.
@@ -504,7 +504,7 @@ This result allows, not only for a faster means of iteratively improving datacen
 		This prototype is capable of performing some basic operations on prefabs, such as importing a prefab from a JSON file on the local filesystem and adding it to the database, exporting a prefab to a JSON file on the filesystem, cloning a prefab, listing all prefabs available in the database, and deleting prefabs.
 		Such behaviour can be seen in Figure~\ref{fig:prototype2}.
 		The functionality modelled covers the most essential functions that a prefab implementation requires, with the listing functionality even including some rudimentary access control support.
-		It also serves as a useful test of the functionality of MongoDB, and provides sufficient reference material for the implmentation of a MongoDB connection in the API of \opendc{}.
+		It also serves as a useful test of the functionality of MongoDB, and provides sufficient reference material for the implementation of a MongoDB connection in the API of \opendc{}.
 
 	\subsection{Lessons Learned}
 		During prototyping, we learnt many things that influenced the decisions we made during the implementation phase.
@@ -556,7 +556,7 @@ This result allows, not only for a faster means of iteratively improving datacen
 \section{Evaluation of Design \& Implementation} \label{sec:evaluation}
 	In this section, we evaluate the success of both the design, and the implementation of our prefab data structure.
 	We do this in two ways: first, we test the ability of prefabs to represent real-life hardware, as per \textbf{RQ1}.
-	Secondly, we use a popular Human Computer Interaction model to assess the success of the implmented operations on prefabs, as per \textbf{RQ3}.
+	Secondly, we use a popular Human Computer Interaction model to assess the success of the implemented operations on prefabs, as per \textbf{RQ3}.
 
 	\subsection{Evaluating the Design with Domain-Specific Prefabs}
 		In this section, we explore the High Performance Computing domain, and validate our prefab representation by creating prefabs for some of the HPC-oriented server offerings from the top 3 OEMs by market share in Q1 2020.
