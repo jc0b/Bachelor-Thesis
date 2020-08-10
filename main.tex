@@ -10,6 +10,8 @@
 \usepackage{appendix}
 \usepackage{caption}
 \usepackage{subcaption}
+
+
 \colorlet{punct}{red!60!black}
 \definecolor{background}{HTML}{EEEEEE}
 \definecolor{delim}{RGB}{20,105,176}
@@ -577,7 +579,7 @@ This result allows, not only for a faster means of iteratively improving datacen
 				Rest of Market              & 456,841            & 17.7\%           \\ \midrule
 				\textbf{Total}              & \textbf{2,575,439} & \textbf{100.0\%} \\ \bottomrule
 				\end{tabular}
-			\caption{Market share distribution amongst server OEMs in Q1 of 2020.}
+			\caption[Market share distribution amongst server OEMs in Q1 of 2020]{Market share distribution amongst server OEMs in Q1 of 2020.}
 			\label{tab:1}
 			\end{table}
 			\begin{table}[]
@@ -596,7 +598,7 @@ This result allows, not only for a faster means of iteratively improving datacen
 					Inspur               & NF5280M5            & 2             & 24             & 25              & 0             \\
 					Inspur Power Systems & FB5180G2            & 2             & 16             & 10              & 0             \\ \bottomrule
 				\end{tabular}
-			\caption{Overview of the HPC prefabs created for this thesis.}
+			\caption[Overview of the HPC prefabs created for this thesis]{Overview of the HPC prefabs created for this thesis.}
 			\label{tab:2}
 			\end{table}
 			\newpage
@@ -722,16 +724,15 @@ This result allows, not only for a faster means of iteratively improving datacen
 				\begin{subfigure}[b]{\textwidth}
 					\centering
 					\includegraphics[width=\textwidth]{results/opendc1.png}
-					\caption[Graph showing interactions required to complete a KLM task in \opendc{} without our extensions]{Graph showing interactions required to complete a KLM task in \opendc{} without prefabs.}
-					\label{fig:opendcklm1}
+					\caption{\label{fig:opendcklm1}}
 				\end{subfigure}
 				\vfill
 				\begin{subfigure}[b]{\textwidth}
 					\centering
 					\includegraphics[width=\textwidth]{results/opendc2.png}
-					\caption[Graph showing interactions required to complete a KLM task in \opendc{} with our extensions]{Graph showing interactions required to complete a KLM task in \opendc{} with prefabs.}
-					\label{fig:opendcklm2}
+					\caption{\label{fig:opendcklm2}}
 				\end{subfigure}
+				\caption[Graphs showing interactions required to complete a KLM task in \opendc{} without and with our extensions]{Graphs showing interactions required to complete a KLM task in \opendc{} without and with prefabs.}
 				\label{fig:opendcklm}
 			\end{figure}
 			\begin{figure}[]
@@ -837,14 +838,15 @@ This result allows, not only for a faster means of iteratively improving datacen
 \bibliography{main}
 \newpage
 \appendix
-\appendixpage
-\addappheadtotoc
-\begin{table}[]
+\section{Appendix: Data from KLM Testing}
+\label{appendix:KLMresults}
+\begin{table}[h!]
 			\centering
-			\resizebox*{!}{\textheight}{%
+			\resizebox*{!}{0.8\textheight}{%
 				\begin{tabular}{lrlr}
 					\toprule
-					\multicolumn{2}{l}{version 1.x}                      & \multicolumn{2}{l}{version 2.x}                       \\ \midrule
+					\multicolumn{2}{l}{version 1.x}                                 & \multicolumn{2}{l}{version 2.x}                                        \\ \hline
+					Interaction                              & Time taken (seconds) & Interaction                                     & Time taken (seconds) \\ \hline
 					Move to target tile                      & 1.1       & Move mouse to target rack                       & 1.1 \\
 					Click                                    & 0.1       & Click                                           & 0.1 \\
 					Move to "start rack construction" button & 1.1       & Click                                           & 0.1 \\
@@ -917,16 +919,13 @@ This result allows, not only for a faster means of iteratively improving datacen
 					Click                                    & 0.1       &                                                 &     \\ \midrule
 					\textbf{M + 35P + 35B + 35R}             &           & \textbf{M + 7P + 8B + 8R}                       &     \\
 					\textbf{= 1.35 + 38.5 + 3.5 + 3.5}       & \textbf{} & \textbf{= 1.35 + 7.7 + 0.8 + 0.8}               &     \\
-					\textbf{= 46.85}                         & \textbf{} & \textbf{= 10.65}                                &     \\ \bottomrule
+					\textbf{= 46.85~seconds}                         & \textbf{} & \textbf{= 10.65~seconds}                                &     \\ \bottomrule
 				\end{tabular}%
 				}
-				\caption{Results of KLM testing before and after the addition of prefabs.}
+				\caption[Results of KLM testing before and after the addition of prefabs]{Results of KLM testing before and after the addition of prefabs.}
 				\label{tab:results}
 			\end{table}
 
 
 \end{document}
 % \end{document}
-
-M + 7P + 8B + 8R= 1.35 + 7.7 + 0.8 + 0.8= 10.65
-M + 35P + 35B + 35R= 1.35 + 38.5 + 3.5 + 3.5= 46.85
