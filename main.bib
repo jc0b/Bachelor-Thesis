@@ -651,6 +651,92 @@ pages = {534--543},
 title = {{An Approach and Case Study of Cloud Instance Type Selection for Multi-Tier Web Applications}},
 year = {2017}
 }
+@article{Zheng2004,
+abstract = {We present a parallel simulator - BigSim - for predicting performance of machines with a very large number of processors. The simulator provides the ability to make performance predictions for machines such as Blue-Gene/L, based on actual execution of real applications. We present this capability using case-studies of some application benchmarks. Such a simulator is useful to evaluate the performance of specific applications on such machines even before they are built. A sequential simulator may be too slow or infeasible. However, a parallel simulator faces problems of causality violations. We describe our scheme based on ideas from parallel discrete event simulation and utilize inherent determinacy of many parallel applications. We also explore techniques for optimizing such parallel simulations of machines with large number of processors on existing machines with fewer number of processors.},
+author = {Zheng, Gengbin and Kakulapati, Gunavardhan and Kal{\'{e}}, Laxmikant V.},
+doi = {10.1109/ipdps.2004.1303013},
+file = {:Volumes/GoogleDrive/My Drive/Thesis/Literature/zheng2004.pdf:pdf},
+isbn = {0769521320},
+journal = {Proceedings - International Parallel and Distributed Processing Symposium, IPDPS 2004 (Abstracts and CD-ROM)},
+number = {C},
+pages = {1105--1114},
+title = {{BigSim: A parallel simulator for performance prediction of extremely large parallel machines}},
+volume = {18},
+year = {2004}
+}
+@article{Casanova2008,
+abstract = {Distributed computing is a very broad and active research area comprising elds such as cluster computing, computational grids, desktop grids and peer-to-peer (P2P) systems. Unfortunately, it is often impossible to obtain theoretical or analytical results to compare the performance of algorithms targeting such systems. One possibility is to conduct large numbers of back-to-back experiments on real platforms. While this is possible on tightly-coupled platforms, it is infeasible on modern distributed platforms as experiments are labor-intensive and results typically not reproducible. Consequently, one must resort to simulations, which enable reproducible results and also make it possible to explore wide ranges of platform and application scenarios. In this paper we describe the SIMGrid framework, a simulation-based framework for evaluating cluster, grid and P2P algorithms and heuristics. This paper focuses on SIMGrid v3, which greatly improves on previous versions thanks to a novel and validated modular simulation engine that achieves higher simulation speed without hindering simulation accuracy. Also, two new user interfaces were added to broaden the targeted research community. After surveying existing tools and methodologies we describe the key features and bene ts of SIMGrid. {\textcopyright} 2008 IEEE.},
+author = {Casanova, Henri and Legrand, Arnaud and Quinson, Martin},
+doi = {10.1109/UKSIM.2008.28},
+file = {:Volumes/GoogleDrive/My Drive/Thesis/Literature/casanova2008.pdf:pdf},
+isbn = {0769531148},
+journal = {Proceedings - UKSim 10th International Conference on Computer Modelling and Simulation, EUROSIM/UKSim2008},
+pages = {126--131},
+title = {{SimGrid: A generic framework for large-scale distributed experiments}},
+year = {2008}
+}
+@article{Calheiros2011,
+abstract = {Wang et al. (Softw. Pract. Exper. 2007; 37(7):727-745) observed a phenomenon of performance inconsistency in the graphics of Java Abstract Window Toolkit (AWT)/Swing among different Java runtime environments (JREs) on Windows XP. This phenomenon makes it difficult to predict the performance of Java game applications. Therefore, they proposed a portable AWT/Swing architecture, called CYC Window Toolkit (CWT), to provide programmers with high and consistent rendering performance for Java game development among different JREs. They implemented a DirectX version to demonstrate the feasibility of the architecture. This paper extends the above research to other environments in two aspects. First, we evaluate the rendering performance of the original Java AWT with different combinations of JREs, image application programming interfaces, system properties and operating systems (OSs), including Windows XP, Windows Vista, Fedora and Mac OS X. The evaluation results indicate that the performance inconsistency of Java AWT also exists among the four OSs, even if the same hardware configuration is used. Second, we design an OpenGL version of CWT, named CWT-GL, to take advantage of modern 3D graphics cards, and compare the rendering performance of CWT with Java AWT/Swing. The results show that CWT-GL achieves more consistent and higher rendering performance in JREs 1.4to 1.6 on the four OSs. The results also hint at two approaches: (a) decouple the rendering pipelines of Java AWT/Swing from the JREs for faster upgrading and supporting old JREs and (b) use other graphics libraries, such as CWT, instead of Java AWT/Swing to develop cross-platform Java games with higher and more consistent rendering performance {\textcopyright} 2009 John Wiley & Sons, Ltd.},
+author = {Calheiros, Rodrigo N. and Ranjan, Rajiv and Beloglazov, Anton and {De Rose}, C{\'{e}}sar A. F. and Buyya, Rajkumar},
+doi = {10.1002/spe.995},
+file = {:Volumes/GoogleDrive/My Drive/Thesis/Literature/calheiros2010.pdf:pdf},
+issn = {00380644},
+journal = {Software: Practice and Experience},
+keywords = {CYC Window Toolkit,Directx,Linux,Mac OS x,OpenGL,Windows},
+month = {jan},
+number = {1},
+pages = {23--50},
+title = {{CloudSim: a toolkit for modeling and simulation of cloud computing environments and evaluation of resource provisioning algorithms}},
+url = {http://doi.wiley.com/10.1002/spe.995},
+volume = {41},
+year = {2011}
+}
+@article{Buyya2002,
+abstract = {Clusters, Grids, and peer-to-peer (P2P) networks have emerged as popular paradigms for next generation parallel and distributed computing. They enable aggregation of distributed resources for solving large-scale problems in science, engineering, and commerce. In Grid and P2P computing environments, the resources are usually geographically distributed in multiple administrative domains, managed and owned by different organizations with different policies, and interconnected by wide-area networks or the Internet. This introduces a number of resource management and application scheduling challenges in the domain of security, resource and policy heterogeneity, fault tolerance, continuously changing resource conditions, and politics. The resource management and scheduling systems for Grid computing need to manage resources and application execution depending on either resource consumers' or owners' requirements, and continuously adapt to changes in resource availability. The management of resources and scheduling of applications in such large-scale distributed systems is a complex undertaking. In order to prove the effectiveness of resource brokers and associated scheduling algorithms, their performance needs to be evaluated under different scenarios such as varying number of resources and users with different requirements. In a Grid environment, it is hard and even impossible to perform scheduler performance evaluation in a repeatable and controllable manner as resources and users are distributed across multiple organizations with their own policies. To overcome this limitation, we have developed a Java-based discrete-event Grid simulation toolkit called GridSim. The toolkit supports modeling and simulation of heterogeneous Grid resources (both time- and space-shared), users and application models. It provides primitives for creation of application tasks, mapping of tasks to resources, and their management. To demonstrate suitability of the GridSim toolkit, we have simulated a Nimrod-G like grid resource broker and evaluated the performance of deadline and budget constrained cost- and time- minimization scheduling algorithms.},
+author = {Buyya, Rajkumar and Murshed, Manzur},
+doi = {10.1002/cpe.710},
+file = {:Volumes/GoogleDrive/My Drive/Thesis/Literature/buyya2002.pdf:pdf},
+issn = {15320626},
+journal = {Concurrency Computation Practice and Experience},
+keywords = {Grid computing,Modelling,Performance evaluation,Scheduling,Simulation},
+number = {13-15},
+pages = {1175--1220},
+title = {{GridSim: A toolkit for the modeling and simulation of distributed resource management and scheduling for grid computing}},
+volume = {14},
+year = {2002}
+}
+@article{Kabakus2017,
+abstract = {The popularity of NoSQL databases has increased due to the need of (1) processing vast amount of data faster than the relational database management systems by taking the advantage of highly scalable architecture, (2) flexible (schema-free) data structure, and, (3) low latency and high performance. Despite that memory usage is not major criteria to evaluate performance of algorithms, since these databases serve the data from memory, their memory usages are also experimented alongside the time taken to complete each operation in the paper to reveal which one uses the memory most efficiently. Currently there exists over 225 NoSQL databases that provide different features and characteristics. So it is necessary to reveal which one provides better performance for different data operations. In this paper, we experiment the widely used in-memory databases to measure their performance in terms of (1) the time taken to complete operations, and (2) how efficiently they use memory during operations. As per the results reported in this paper, there is no database that provides the best performance for all data operations. It is also proved that even though a RDMS stores its data in memory, its overall performance is worse than NoSQL databases.},
+author = {Kabakus, Abdullah Talha and Kara, Resul},
+doi = {10.1016/j.jksuci.2016.06.007},
+file = {:Volumes/GoogleDrive/My Drive/Thesis/Literature/kabakus2016.pdf:pdf},
+issn = {22131248},
+journal = {Journal of King Saud University - Computer and Information Sciences},
+keywords = {Database performance,In-memory databases,NoSQL databases},
+number = {4},
+pages = {520--525},
+publisher = {King Saud University},
+title = {{A performance evaluation of in-memory databases}},
+url = {https://doi.org/10.1016/j.jksuci.2016.06.007},
+volume = {29},
+year = {2017}
+}
+@inproceedings{Drapeau1994,
+abstract = {In 1989, the RAID (Redundant Arrays of Inexpensive Disks) group at U. C. Berkeley built a prototype disk array called RAID-I. The bandwidth achieved by RAID-I was severely limited by the memory system bandwidth of the disk array's host workstation. As a result, most of the bandwidth available from the disks could not be delivered to clients of the RAID-I file server. We designed our second prototype, RAID-II, to deliver more of the disk array bandwidth to file server clients. A custom-built crossbar memory system called the XBUS board connects the disks directly to the high-speed network, allowing data for large requests to bypass the server workstation. A single workstation can control several XBUS boards for increased bandwidth. RAID-II runs the Log-Structured File System (LFS) software to optimize performance for bandwidth-intensive applications. The RAID-II hardware with a single XBUS controller board delivers 20 megabytes/second of raw I/O between 24 disks and the high-speed network for large, random read operations and up to 31 megabytes/second for sequential read operations. This is an order of magnitude better than our first prototype, but lower than our performance goal of 40 megabytes/second because of lower-than-expected performance of the commercial disk controller boards and our disk system interfaces. A preliminary implementation of LFS software on RAID-II configured with 24 disks delivers 13.4 megabytes/second on large read requests.},
+author = {Drapeau, A.L. and Shirriff, K.W. and Hartman, J.H. and Miller, E.L. and Seshan, Srinivasan and Katz, R.H. and Lutz, Ken and Patterson, D.A. and Lee, E.K. and Chen, P.M. and Gibson, G.A.},
+booktitle = {Proceedings of 21 International Symposium on Computer Architecture},
+doi = {10.1109/ISCA.1994.288146},
+file = {:Volumes/GoogleDrive/My Drive/Thesis/Literature/drapeau1994.pdf:pdf},
+isbn = {0-8186-5510-0},
+keywords = {Arrays,Bandwidth,File servers,Hardware,Prototypes,Servers,Workstations},
+pages = {234--244},
+publisher = {IEEE Comput. Soc. Press},
+title = {{RAID-II: a high-bandwidth network file server}},
+url = {http://ieeexplore.ieee.org/document/288146/},
+year = {1994}
+}
+
+
 
 
 
