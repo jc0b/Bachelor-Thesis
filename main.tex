@@ -573,7 +573,7 @@ Our work enables a faster means of iteratively improving datacenter designs, whi
 			Now that both the storage format, as well as the design of the data structure have been decided upon, we can create our data structure in our storage format.
 			In order to create the prefab object in JSON, we begin with the individual components at the lowest level of the hierarchy: the CPU, GPU, memory and storage.
 			Each of these components must be instantiated as a JSON object.
-			An CPU in this format is given as an example in Figure~\ref{jsoncpu}.
+			An CPU in this format is given as an example in Figure~\ref{fig:jsoncpu}.
 			Once each component has been created, they can be added as nested children of their parent objects.
 			For example, a CPU object is added to the \verb|cpus| list in the Machine object, which is in turn added to the \verb|machines| list in the Rack object.
 			Lastly, the Rack object is added as the \verb|rack| value in the Prefab object.
@@ -914,7 +914,7 @@ Our work enables a faster means of iteratively improving datacenter designs, whi
 			As a result, designs tested in this way would become more performant, leading to improvements in datacenter efficiency.
 
 			In Figure~\ref{fig:3}, a truncated JSON representation of a server model (specifically, a Dell PowerEdge R440) is given.
-			This representation includes the metadata surrounding the prefab (as discussed in Chapter~\ref{}), as well as a depiction of the hierarchical layout described in~\ref{}.
+			This representation includes the metadata surrounding the prefab (as discussed in Chapter~\ref{sec:datastructuredefinition}), as well as a depiction of the hierarchical layout described in~\ref{sec:datastructuredesign}.
 			This hierarchical layout provides a logical structure to the prefab, and organizes components where they can easily be found.
 			In addition, it expresses the relationships between the components and the chassis: components can't be used in a datacenter scenario without being enclosed in some kind of chassis.
 			As a result, this design is clearly readable and understandable, conveying its contents quite clearly.
