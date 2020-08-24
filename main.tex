@@ -356,7 +356,7 @@ Our work enables a faster means of iteratively improving datacenter designs, whi
 \newpage
 
 \section{Design of a Datacenter Hardware Representation} \label{sec:design}
-	In this chapter, we address \textbf{RQ1}: \textit{How to design a prefab abstraction that describes important technical and composable features of datacenter hardware to a high degree of fidelity?}
+	In this chapter, we address \textbf{RQ1}: \textit{``How to design a prefab abstraction that describes important technical and composable features of datacenter hardware to a high degree of fidelity?"}.
 	To do this, we introduce our prefab concept, discuss how we envision it can be used, perform a requirements analysis on those use cases, and describe ways to work with prefabs to design datacenters.
 
 	Servers within a datacenter are typically feature rich, and often include specific features to differentiate them from their competitor's.
@@ -384,7 +384,7 @@ Our work enables a faster means of iteratively improving datacenter designs, whi
 		\end{itemize}
 
 		These functional requirements cover the most fundamental tasks outlined in our potential use-cases by stakeholders.
-		We choose these requirements as we believe that, together, they represent our core vision of the use of prefabs in \opendc{}, enabling us to provide an answer to \textbf{RQ1} (\textit{How to design a prefab abstraction that describes important technical and composable features of datacenter hardware to a high degree of fidelity?}).
+		We choose these requirements as we believe that, together, they represent our core vision of the use of prefabs in \opendc{}, enabling us to provide an answer to \textbf{RQ1} (\textit{``How to design a prefab abstraction that describes important technical and composable features of datacenter hardware to a high degree of fidelity?"}).
 
 		\textbf{FR1} and \textbf{FR2} are fundamental to our vision of prefabs.
 		Without the ability to create and use prefabs as defined in these requirements, there would be no benefit to the use of prefabs, as they would effectively not exist.
@@ -653,7 +653,7 @@ Our work enables a faster means of iteratively improving datacenter designs, whi
 
 
 \section{Implementation of a Prototype} \label{sec:prototype}
-	In this chapter, we address \textbf{RQ2}: \textit{How to implement a prototype of the prefab abstraction?}
+	In this chapter, we address \textbf{RQ2}: \textit{``How to implement a prototype of the prefab abstraction?"}.
 	To do this, we explain our reasoning behind the use of a prototype, discuss the development of a prototype, and detail the varying lessons learned during this process.
 	\subsection{Why Prototype?}
 		Prototyping is an important part of our design process.
@@ -788,7 +788,7 @@ Our work enables a faster means of iteratively improving datacenter designs, whi
 
 \section{Evaluation of Design \& Implementation} \label{sec:evaluation}
 	In this chapter, we evaluate the success of both the design, and the implementation of our prefab data structure.
-	We do this in two ways: first, we test the ability of prefabs to represent real-life hardware, addressing a part of \textbf{RQ3} and as per \textbf{RQ1}.
+	We do this in two ways: first, we test the ability of prefabs to represent real-life hardware, addressing a part of \textbf{RQ3} as well as \textbf{RQ1}.
 	Secondly, we use a popular Human-Computer Interaction model to assess the success of the implemented operations on prefabs, thus addressing the second part of \textbf{RQ3}.
 
 	\subsection{Evaluation of the Design with Domain-Specific Prefabs} \label{sec:domainspecificprefabs}
@@ -890,7 +890,7 @@ Our work enables a faster means of iteratively improving datacenter designs, whi
 			\end{figure}
 
 			To select server models to represent, we identify the top server OEMs by market share in Q1 of 2020~\cite{Macatee2020}. These summarised findings are presented in Table~\ref{tab:1}.
-			We choose the three individual manufacturers with the largest market shares (highlighted in green) as our target manufacturers\footnote{There was not sufficient information surrounding the \textit{Original Design Manufacturers} (ODMs) included in the "ODM Direct" grouping to determine whether any individual ODM would fall into our selection on the basis of their direct sales to customers. As a result, we choose to exclude ODM manufacturers.}.
+			We choose the three individual manufacturers with the largest market shares (highlighted in green) as our target manufacturers\footnote{There was not sufficient information surrounding the \textit{Original Design Manufacturers} (ODMs) included in the ``ODM Direct" grouping to determine whether any individual ODM would fall into our selection on the basis of their direct sales to customers. As a result, we choose to exclude ODM manufacturers.}.
 			We then choose the HPC-oriented server offerings from each of these manufacturers, and attempt to model them in the prefab data structure.
 			
 			The server selection process varies slightly by manufacturer, but generally, we seek out servers that the manufacturer describes to be suited for HPC, or other intensive compute workloads.
@@ -970,7 +970,7 @@ Our work enables a faster means of iteratively improving datacenter designs, whi
 
 			For our usability test, we compare the process of copying a rack in version 1.x of \opendc{}, and our new version of \opendc{} with prefabs.
 			We create a room, containing a single rack.
-			This rack contains 3 machines, each containing 1 CPU, 1 GPU, 1 memory DIMM, and one hard disk.
+			This rack contains three machines, each containing one CPU, one GPU, one memory DIMM, and one hard disk.
 			We then attempt to copy the contents of this rack into a new rack.
 			The KLM task begins on the screen shown in Figure~\ref{fig:evalstart}, and ends when a second rack has been created with the same contents as the initial rack.
 			
@@ -1046,7 +1046,7 @@ Our work enables a faster means of iteratively improving datacenter designs, whi
 
 	\subsection{Our Answers to the Research Questions}
 		Datacenter usage is growing fast, and will only continue to grow as more people use products that depend on cloud services.
-		The growth of markets for IoT and game and content streaming will lead to even greater demand for datacenter capacity in the near future.
+		The growth of markets for \textit{Internet of Things} (IoT) as well as game and content streaming will lead to even greater demand for datacenter capacity in the near future.
 		As a result, it remains important that there are people equipped to design these new datacenters, and their expansions.
 		With the extensions made to \opendc{} in this thesis, we intend to help broaden the field of people who are equipped to create these designs, allowing this explosive growth to continue.
 
